@@ -1,12 +1,15 @@
 layout: sidebar
+#layout: stacked
 style: light
+#style: dark
 
 plugins:
   - jekyll-octicons
   - jekyll-github-metadata
   - jemoji
 
-permalink: /:year/:month/:day/:title/
+#permalink: /:year/:month/:day/:title/
+permalink: /:title/
 
 defaults:
   -
