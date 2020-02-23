@@ -1,6 +1,7 @@
 ---
 title: "Spring Batch"
-published: false
+published: true
+img: i-rest.jpg
 ---
 
 **Spring Batch**, this is my Spring batch post.
