@@ -1,59 +1,34 @@
-layout: sidebar
-#layout: stacked
-style: light
-#style: dark
+title: Hello, world! I'm Raffaele Marcello
+description: This is the personal github web site of Raffaele Marcello  
+permalink: ':title/'
+baseurl: "" # the subpath of your site, e.g. /blog, empy for base url
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+site-twitter: #if your site has a twitter account, enter it here
 
+# Author Settings
+author: Raffaele Marcello # add your name
+author-img: rmarcello.png # add your photo
+about-author: I am a web developer ... Always hungry to keep learning. # add description
+social-twitter: https://twitter.com/rmarcello
+social-facebook: # add your Facebook handle
+social-github: marcelloraffaele
+social-linkedin: https://www.linkedin.com/in/raffaele-marcello-4b684514/
+social-email: dev.rmarcello@gmail.com
+
+# Disqus
+discus-identifier: mr-brown # add your discus identifier
+
+# Tracker
+analytics: # Google Analytics
+
+# Build Settings
+markdown: kramdown
 plugins:
-  - jekyll-octicons
-  - jekyll-github-metadata
+  - jekyll-sitemap
+  - jekyll-paginate
   - jemoji
 
-#permalink: /:year/:month/:day/:title/
-permalink: /:title/
+paginate: 8
+paginate_path: "/page/:num"
 
-defaults:
-  -
-    scope:
-      path: "" # an empty string here means all files in the project
-      type: "posts"
-    values:
-      layout: "post"
-
-projects:
-  sort_by: pushed
-  # sort_by options:
-  #   - pushed
-  #   - stars
-  limit: 9
-  exclude:
-    archived: false
-    forks: true
-    projects:
-    # - repo-name
-
-social_media:
-  # behance: your_username
-  # dribbble: your_username
-  # facebook: your_username
-  # hackerrank: your_username
-  #instagram: your_username
-  # keybase: your_username
-  linkedin: https://www.linkedin.com/in/raffaele-marcello-4b684514/
-  # mastodon: your_username
-  # medium: your_username
-  # stackoverflow: your_user_id
-  # telegram: your_username
-  # twitter: your_username
-  # unsplash: your_username
-  # vk: your_username
-  website: http://www.rmarcello.it
-  youtube: https://www.youtube.com/user/rmarcello1984/videos
-
-topics:
-  - name: JAVA
-    web_url: https://github.com/topics/java
-    image_url: https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/java/java.png
-
-  - name: Docker
-    web_url: https://github.com/topics/docker
-    image_url: https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/docker/docker.png
+exclude: ["node_modules", "gulpfile.js", "package.json", "yarn.lock"]
