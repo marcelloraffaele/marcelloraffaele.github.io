@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Run an Oracle Database on Docker in 5 minutes
-date: 2020-04-16 20:00:00 +0100
+date: 2020-04-15 20:00:00 +0100
 description: Simple first post
 img: container_oracle.png # Add image post (optional)
 fig-caption: docker_oracle.png # Add figcaption (optional)
@@ -32,7 +32,7 @@ docker exec -it oracle-db-12c bash -c "source /home/oracle/.bashrc; sqlplus /nol
 ```
 
 #sql
-```SQL
+```
 connect sys/Oradoc_db1@ORCLCDB as sysdba
 
 alter session set container=ORCLPDB1;
