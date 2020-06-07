@@ -1,0 +1,86 @@
+I"�<p>I really wanted to write a short article on how to install a complete Oracle Enterprise Database on your local machine. After some research I have found that the easiest and cleanest way is to use Docker. Using Docker we can take advantage of the many “images” on the Docker hub to experiment, test, play or simply tweak with many products in their original versions or if we want in the modified and extended versions by other developers.</p>
+
+<p>Dopo un po di ricerche ho scoperto che il modo più semplice è pulito è utilizzare Docker.
+Utilizzando Docker possiamo sfruttare le numerosissime “immagini” presenti sul Docker hub per sperimentare, testare, giocare o semplicemente smanettare con tantissimi prodotti nelle loro versioni originali o se vogliamo nelle versioni modificate e estese da altri sviluppatori.</p>
+
+<p>Questa volta il mio scopo era semplicemente quello di installare in locale una versione completa di Orale Database in modo da effettuare alcune prove. Finite le prove, voglio essere libero di arrestare il container e ripulire tutto.</p>
+
+<h3 id="cosa-serve">Cosa serve?</h3>
+<p>La prima cosa che bisogna fare è assicurarsi di avere una versione installata e funzionante di Docker.
+Se non avete ancora installato docker, fatelo subito dal sito: <a href="https://docs.docker.com/">docs.docker.com</a></p>
+
+<p>Se volete verificare che docker sia funzionante, aprite una shell è lanciate il seguente comando:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker run hello-world</code></pre></figure>
+
+<p>Dovreste vedere scaricare l’immagine di hello world e successivamente l’output releativo all’esecuzione.</p>
+
+<p>Successivamente sarà necessario creare un account per il DockerHub dal sito <a href="https://hub.docker.com/">hub.docker.com</a> effettua la registrazione.
+A questo punto, sarà possibile cercare l’immagine desiderata con il nome “Oracle Database Enterprise Edition”:</p>
+
+<p><img src="/assets/img/docker-oracledb/docker-hub.png" alt="docker-hub-oracledb" />
+Come possiamo notare, l’immagine è creata e gesatita direttamente da Oracle è Docker lo certifica. Possiamo notare anche che l’immagine è basata su Oracle Database Server 12.2.0.1 Enterprise Edition che verrà eseguito su Oracle Linux 7. Un’ altra cosa che possiamo notare è che sarà necessario effettuare il “checkout” dell’immagine e accettare i termini definiti da Oracle. Effettuato ciò, possiamo passare all’azione.</p>
+
+<h3 id="come-si-fa">Come si fa?</h3>
+<p>A questo punto, dobbiamo scaricare l’immagine docker ed effettuare il pull, tuttavia per scaricare questa immagine ci è prima richiesto effettuare login:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker login</code></pre></figure>
+
+<p>successivamente scarichiamo l’immagine. Nota, proprio perchè il database è una versione “Enterprise Edition” su un Oracle Linux 7, la dimensione del’immagine risulta essere abbastanza ingombrante (4Gb per la versione base ), ho deciso di utilizzare per questo articola la variante slim dell’immagine “12.2.0.1-slim” che invece occupa solo 2Gb. La variante slim, non supporta le seguenti features: Analytics, Oracle R, Oracle Label Security, Oracle Text, Oracle Application Express and Oracle DataVault.</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker pull store/oracle/database-enterprise:12.2.0.1-slim</code></pre></figure>
+
+<p>Terminato il download dell’immagine, siamo ad un passo dal poter finalmente eseguire il container contenete il nostro Database utilizzando il seguente comando:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker run <span class="nt">-d</span> <span class="nt">-it</span> <span class="nt">--name</span> oracle-db <span class="nt">-p</span> 1521:1521 store/oracle/database-enterprise:12.2.0.1-slim</code></pre></figure>
+
+<p>Nota: non ho specificato nessun volume per cui all’arresto dell’istanza perderò tutti i dati, per questo primo esempio può anche andare bene. Inoltre ho esposto la porta 1521 e non ho specificato nessun altro parametro per cui il database avrà tutto il setup di default.</p>
+
+<p>Il container impiegherà un po di tempo per partire, per questo sarà importante comprendere se ha terminato l’inizializzazione e per fare ciò possiamo contultare i log:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker logs <span class="nt">-f</span> oracle-db</code></pre></figure>
+
+<p>Per concludere che il database è up e running, possiamo consultare lo stato del container e verificare che sia in “healty”:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker ps <span class="nt">-f</span> <span class="nv">name</span><span class="o">=</span>oracle-db</code></pre></figure>
+
+<p>Il container è in esecuzione e possiamo interagire con il nostro database.</p>
+
+<h3 id="setup-base-del-database">Setup base del Database</h3>
+<p>Tuttavia quello che abbiamo è un database vuoto per cui abbiamo la necessità di creare delle configurazione base. Per fare questo, consiglio di accedere a sqlplus digitando il comando:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">docker <span class="nb">exec</span> <span class="nt">-it</span> oracle-db bash <span class="nt">-c</span> <span class="s2">"source /home/oracle/.bashrc; sqlplus /nolog"</span>
+
+SQL<span class="k">*</span>Plus: Release 12.2.0.1.0 Production on Sat Apr 18 17:06:54 2020
+
+Copyright <span class="o">(</span>c<span class="o">)</span> 1982, 2016, Oracle.  All rights reserved.
+
+SQL&gt;</code></pre></figure>
+
+<p>da qui siamo liberi di eseguire tutte leconfigurazioni che desideriamo all’interno del database.
+Io qui propongo una versione base per definire un utente che chiamerò “myuser”, assegnare all’utente i grant base e infine tablespace illimitato:</p>
+
+<figure class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">connect</span> <span class="n">sys</span><span class="o">/</span><span class="n">Oradoc_db1</span><span class="o">@</span><span class="n">ORCLCDB</span> <span class="k">as</span> <span class="n">sysdba</span>
+
+<span class="k">alter</span> <span class="k">session</span> <span class="k">set</span> <span class="n">container</span><span class="o">=</span><span class="n">ORCLPDB1</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">USER</span> <span class="n">myuser</span> <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="n">myuser</span>
+	<span class="n">PROFILE</span> <span class="k">default</span>
+	<span class="n">ACCOUNT</span> <span class="n">UNLOCK</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">CONNECT</span> <span class="k">TO</span> <span class="n">myuser</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="n">RESOURCE</span> <span class="k">TO</span> <span class="n">myuser</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="k">CREATE</span> <span class="k">ANY</span> <span class="k">VIEW</span> <span class="k">TO</span> <span class="n">myuser</span><span class="p">;</span>
+<span class="k">GRANT</span> <span class="n">UNLIMITED</span> <span class="n">TABLESPACE</span> <span class="k">TO</span> <span class="n">myuser</span><span class="p">;</span></code></pre></figure>
+
+<p>Da questo momento in poi possiamo accedere al database mediante un qualsiasi client, per esempio Oracle SQL Developer:</p>
+
+<p><img src="/assets/img/docker-oracledb/OracleSQLDeveloper.PNG" alt="OracleSQLDeveloper" /></p>
+
+<h4 id="stop-e-pulizia-del-container">Stop e pulizia del container</h4>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#stop del container</span>
+docker stop oracle-db
+<span class="c">#eliminazione del container</span>
+docker <span class="nb">rm </span>oracle-db</code></pre></figure>
+
+:ET

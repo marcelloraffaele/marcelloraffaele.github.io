@@ -12,7 +12,7 @@ Da qualche giorno ormai volevo scrivere un breve articolo su come installare sul
 Dopo un po di ricerche ho scoperto che il modo più semplice è pulito è utilizzare Docker.
 Utilizzando Docker possiamo sfruttare le numerosissime "immagini" presenti sul Docker hub per sperimentare, testare, giocare o semplicemente smanettare con tantissimi prodotti nelle loro versioni originali o se vogliamo nelle versioni modificate e estese da altri sviluppatori.
 
-Questa volta il mio scopo era semplicemente quello di installare in locale una versione completa di Orale Database in modo da effettuare alcune prove. Finite le prove, voglio essere libero di arrestare il container e ripulire tutto.
+Questa volta il mio scopo era semplicemente quello di installare in locale una versione completa di Oracle Database in modo da effettuare alcune prove. Finite le prove, voglio essere libero di arrestare il container e ripulire tutto.
 
 ### Cosa serve?
 La prima cosa che bisogna fare è assicurarsi di avere una versione installata e funzionante di Docker.
@@ -29,7 +29,7 @@ Successivamente sarà necessario creare un account per il DockerHub dal sito <a 
 A questo punto, sarà possibile cercare l'immagine desiderata con il nome "Oracle Database Enterprise Edition":
 
 ![docker-hub-oracledb]({{site.baseurl}}/assets/img/docker-oracledb/docker-hub.png)
-Come possiamo notare, l'immagine è creata e gesatita direttamente da Oracle è Docker lo certifica. Possiamo notare anche che l'immagine è basata su Oracle Database Server 12.2.0.1 Enterprise Edition che verrà eseguito su Oracle Linux 7. Un' altra cosa che possiamo notare è che sarà necessario effettuare il "checkout" dell'immagine e accettare i termini definiti da Oracle. Effettuato ciò, possiamo passare all'azione.
+Come possiamo notare, l'immagine è creata e gestita direttamente da Oracle è Docker lo certifica. Possiamo notare anche che l'immagine è basata su Oracle Database Server 12.2.0.1 Enterprise Edition che verrà eseguito su Oracle Linux 7. Un' altra cosa che possiamo notare è che sarà necessario effettuare il "checkout" dell'immagine e accettare i termini definiti da Oracle. Effettuato ciò, possiamo passare all'azione.
 
 
 ### Come si fa?
@@ -43,7 +43,7 @@ successivamente scarichiamo l'immagine. Nota, proprio perchè il database è una
 docker pull store/oracle/database-enterprise:12.2.0.1-slim
 {% endhighlight %}
 
-Terminato il download dell'immagine, siamo ad un passo dal poter finalmente eseguire il container contenete il nostro Database utilizzando il seguente comando:
+Terminato il download dell'immagine, siamo ad un passo dal poter finalmente eseguire il container contente il nostro Database utilizzando il seguente comando:
 {% highlight shell %}
 docker run -d -it --name oracle-db -p 1521:1521 store/oracle/database-enterprise:12.2.0.1-slim
 {% endhighlight %}
@@ -63,7 +63,7 @@ docker ps -f name=oracle-db
 Il container è in esecuzione e possiamo interagire con il nostro database.
 
 ### Setup base del Database
-Tuttavia quello che abbiamo è un database vuoto per cui abbiamo la necessità di creare delle configurazione base. Per fare questo, consiglio di accedere a sqlplus digitando il comando:
+Quello che abbiamo ora, è un database vuoto per cui abbiamo la necessità di creare delle configurazione base. Per fare questo, consiglio di accedere a sqlplus digitando il comando:
 {% highlight shell %}
 docker exec -it oracle-db bash -c "source /home/oracle/.bashrc; sqlplus /nolog"
 
