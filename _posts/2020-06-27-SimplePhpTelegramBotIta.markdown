@@ -149,6 +149,9 @@ allora possiamo provare il nostro bot, accediamo a <a href="t.me/Botzellette_bot
 Per testare il nostro bot, basta aprire una finestra di chat e inviare messaggi:
 ![telegram-bot-botBotzelle]({{site.baseurl}}/assets/img/telegram-bot-php/telegram-bot-Botzelle.png)
 
+Oppure guarda questo:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/m5EgaGtsIzo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ### Conclusioni
 L'articolo è molto semplice ed ha come scopo quello di mostrare come è possibile utilizzare un semplice dominio PHP per realizzare un BOT Telegram sempre online e senza spendere un capitale per hosting complessi.
 
