@@ -136,7 +136,7 @@ A questo punto non ci resta che pubblicare la pagina php e prenderne il path com
 Come abbiamo detto nei passaggi precedenti la "connessione" tra i server Telegram e il servizio che abbiam implementato è il Webhook. Bisogna dire alla API di tegram che può gestire tutti i messaggi destinati al nostro bot tramite il nostro link.
 Apriamo un semplice browser al link:
 
-https://api.telegram.org/bot<b><yourtoken></b>/setwebhook?url=<b>https://yourdomain.com/yourbot.php</b>
+https://api.telegram.org/bot<yourtoken>/setwebhook?url=https://yourdomain.com/yourbot.php
 
 se otterrete:
 {% highlight json %}
