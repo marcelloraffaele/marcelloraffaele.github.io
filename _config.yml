@@ -8,9 +8,9 @@ site-twitter: #if your site has a twitter account, enter it here
 # Author Settings
 author: Raffaele Marcello # add your name
 author-img: rmarcello.png # add your photo
-about-author: I am a Software Engineer ... and this is my personal Blog. Here you can find some articles about my experiences and my ideas about some IT topics. I hope you can find it interesting!
-social-twitter: https://twitter.com/rmarcello
-social-facebook: # add your Facebook handle
+about-author: I am a Solution Architect ... and this is my personal Blog. Here you can find some articles about my experiences and my ideas about some IT topics. I hope you can find it interesting!
+social-twitter: rmarcello
+#social-facebook: # add your Facebook handle
 social-github: marcelloraffaele
 social-linkedin: https://www.linkedin.com/in/raffaele-marcello-4b684514/
 social-email: dev.rmarcello@gmail.com
