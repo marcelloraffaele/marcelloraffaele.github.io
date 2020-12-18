@@ -28,7 +28,7 @@ Dovreste vedere scaricare l'immagine di hello world e successivamente l'output r
 Successivamente sarà necessario creare un account per il DockerHub dal sito <a href="https://hub.docker.com/">hub.docker.com</a> effettua la registrazione.
 A questo punto, sarà possibile cercare l'immagine desiderata con il nome "Oracle Database Enterprise Edition":
 
-![docker-hub-oracledb]({{site.baseurl}}/assets/img/docker-oracledb/docker-hub.png)
+![docker-hub-oracledb]({{site.baseurl}}/assets/img/docker-oracledb/docker_hub.png)
 Come possiamo notare, l'immagine è creata e gestita direttamente da Oracle è Docker lo certifica. Possiamo notare anche che l'immagine è basata su Oracle Database Server 12.2.0.1 Enterprise Edition che verrà eseguito su Oracle Linux 7. Un' altra cosa che possiamo notare è che sarà necessario effettuare il "checkout" dell'immagine e accettare i termini definiti da Oracle. Effettuato ciò, possiamo passare all'azione.
 
 
