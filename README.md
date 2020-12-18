@@ -8,4 +8,4 @@ to clean everything
 bundle exec jekyll clean 
 
 
-I estended the theme from: https://artemsheludko.github.io/flexible-jekyll/
+I extended the theme from: https://artemsheludko.github.io/flexible-jekyll/
