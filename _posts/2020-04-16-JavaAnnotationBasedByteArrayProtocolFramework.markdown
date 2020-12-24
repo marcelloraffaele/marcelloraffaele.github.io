@@ -18,44 +18,119 @@ I was almost giving up when I was inspired by Hibernate – one of the most famo
 Off course, this project is still not a complete framework but it’s a feasibility exercise that can help me to show that it’s possible to define a set of annotations and develop an engine that enable developers to solve this kind of problems in a very easy, quick and safe way.
 
 
-Here an example of bean definition and engine invocation:
+You can define simple POJO Beans using few simple Annotation to define the mapping:
 
 {% highlight java %}
-@BufferOut
-public class ExampleBean {
- 
-   @ProtocolField(size=4)
-   private String type;
- 
-   @ProtocolField(size=3)
-   private Integer version;
- 
-   @ProtocolField(size=6)
-   private String name;
- 
-   @ProtocolField(size=10)
-   private String description;
- 
-   //…
- 
+/**
+ * SimpleProtocol is a simple text based protocol.
+ * The filds list is the following:
+ * type     String      2 bytes
+ * sender   String      100 bytes
+ * message  String      154 bytes
+ * Each message is 256 bytes.
+ */
+@ProtocolEntity
+public class SimpleProtocol {
+    
+    @ProtocolField(size=2)
+    private String type;
+    
+    @ProtocolField(size=100)
+    private String sender;
+    
+    @ProtocolField(size=154, filler = FillerType.RIGHT)
+    private String message;
+	
+	//constructor, get and setter
 }
 {% endhighlight %}
 
 Look this is the typical implementation that we do for Java Persistence!
-
-Where @BufferIn says that the bean can be used to parse from byte the bean and @BufferOut that the bean can be transformed in byte array.
-
-The annotation @ProtocolField(size=10) says that the field must be treated by the engine and it size in the buffer must be 10.The annotation can be extended and for example it can define also some unrequired information (for example text-alignment or decimal formatting).
+Where @ProtocolEntity says that the bean can be used to parse from byte can be transformed in byte array.
+The annotation @ProtocolField(size=2) tells to the engine how must be treated the fiels, in this case like a String and it size in the buffer must be 2. The annotation can be extended and for example it can define also some extra information (for example text-alignment or bynary/decimal formatting).
 
 But the best part is here, the conversion is very simple and it needs only one line of code:
 
 {% highlight java %}
-ExampleBean bean = (ExampleBean) Engine.fromBytes( byteArray, ExampleBean.class );
- 
-//converts to byte array
-byte[] res = Engine.toBytes( bean );
+//parsing
+SimpleProtocol simpleProtocol = engine.fromByte(sourceBuffer, SimpleProtocol.class); 
+
+//covert to byte array
+byte[] buffer = EngineFactory.create().toByte(simpleProtocol);
 {% endhighlight %}
 
-You can find my project on github:
+At the current version the framework supports the fallowing types:
+<ol>
+  <li>int/Integer</li>
+  <li>short/Short</li>
+  <li>byte/Byte/byte[]</li>
+  <li>long/Long</li>
+  <li>String</li>
+</ol>
+
+It can be extended to support also other generic types.
+Another important feature is the support of inheritance. The developer can extend existing classes. The mapping works appending the fields to the super class fields.
+In this way you can define header common part and separate Body entities will extend the header.
+
+{% highlight java %}
+/**
+ * The Header is an abstract class that define the common attributes of the protocol header.
+ * The filds list is the following:
+ * version          String              2 bytes
+ * sequenceNumber   Integer (bynary)    5 bytes
+ * length           Integer (bynary)    3 bytes
+ */
+@ProtocolEntity
+public abstract class HeaderProtocol {
+
+    @ProtocolField(size=2, filler = FillerType.RIGHT )
+    protected String version;
+
+    @ProtocolField(size=5, numericEncoding = NumericEncoding.BINARY)
+    protected Integer sequenceNumber;  
+    
+    @ProtocolField(size=3, numericEncoding = NumericEncoding.BINARY)
+    protected Integer length;
+    
+    //constructor, get and setter
+}
+
+
+/**
+ * The HeartBeatProtocol is an class that define HeartBeat protocol. It extends the header.
+ * The filds list is the following:
+ * timestamp   Long (bynary)    10 bytes
+ * crc     byte (bynary)    3 bytes
+ * 
+ */
+public class HeartBeatProtocol extends HeaderProtocol {
+
+    @ProtocolField(size = 10, numericEncoding = NumericEncoding.BINARY)
+    private Long timestamp;
+
+    @ProtocolField(size = 3)
+	private byte[] crc;
+    
+    //constructor, get and setter
+
+}
+{% endhighlight %}
+
+The engine invocation doesn't change:
+
+{% highlight java %}
+//create an Engine
+Engine engine = EngineFactory.create();
+
+//parsing
+HeartBeatProtocol heartBeatParsed = engine.fromByte(heartBeatByte, HeartBeatProtocol.class);
+
+//covert to byte array
+byte[] heartBeatByte = engine.toByte(heartBeat);
+
+{% endhighlight %}
+
+
+If interested, you can find my project on github:
 <a href="https://github.com/marcelloraffaele/positional-protocol">https://github.com/marcelloraffaele/positional-protocol</a>
-If you appreciate my idea and want more information feel free to contact me.
+If you appreciate my idea or want more information feel free to contact me.
