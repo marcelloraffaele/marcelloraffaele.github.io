@@ -46,8 +46,22 @@ public class SimpleProtocol {
 {% endhighlight %}
 
 Look this is the typical implementation that we do for Java Persistence!
-Where @ProtocolEntity says that the bean can be used to parse from byte can be transformed in byte array.
-The annotation @ProtocolField(size=2) tells to the engine how must be treated the fiels, in this case like a String and it size in the buffer must be 2. The annotation can be extended and for example it can define also some extra information (for example text-alignment or bynary/decimal formatting).
+The @ProtocolEntity says that this POJO Bean can be used for both parse from bytes and transformed into byte array.
+The annotation @ProtocolField(size=2) tells to the engine how must be treated the fields, in this case like a String and it size in the buffer must be 2. Using the annotation we are able also to specify some extra information relative to text-alignment or bynary/decimal formatting.
+{% highlight java %}
+//String fill on left
+@ProtocolField(size = 10, filler = FillerType.LEFT)
+
+//String fill on right
+@ProtocolField(size = 10, filler = FillerType.RIGHT)
+
+//numeric conversion to string characters
+@ProtocolField(size = 3, numericEncoding = NumericEncoding.TEXT)
+
+//numeric conversion to binary representation
+@ProtocolField(size = 3, numericEncoding = NumericEncoding.BYNARY)
+{% endhighlight %}
+
 
 But the best part is here, the conversion is very simple and it needs only one line of code:
 
