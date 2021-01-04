@@ -13,27 +13,25 @@ After some days spent reading books about Microservices and Cloud Native I found
 From <a href="https://quarkus.io">quarkus.io</a> web site, Quarkus is defined as "A Kubernetes Native Java stack tailored for OpenJDK HotSpot and GraalVM, crafted from the best of breed Java libraries and standards".
 In Quarkus the Cloud Native approach is crucial and it's possible to build native container images that give the opportunity to reduce boot time, incredibly low RSS memory (not just heap size!) offering near instant scale up and high density memory utilization in container orchestration platforms like Kubernetes.
 Quarkus provides a simple and fun to use, full-stack framework by leveraging a growing list of over fifty best-of-breed libraries.
-The Quarkus programming model builds on top of proven standards such as dependency injection solution is based on CDI, JAX-RS annotations to define the REST endpoints, JPA annotations to map your persistent entities and JTA annotations to declare the transaction boundaries,Eclipse MicroProfile to configure and monitor your application, Vert.x, Apache Camel and much more.
+The Quarkus programming model builds on top of proven standards such as dependency injection solution based on CDI, JAX-RS annotations to define the REST endpoints, JPA annotations to map your persistent entities and JTA annotations to declare the transaction boundaries, Eclipse MicroProfile to configure and monitor your application, Vert.x, Apache Camel and much more.
 
-
-This article is the first in a series of articles. In these articles we will see from the developer's point of view how to develop using Quarkus a microservices-based application from scratch to deploy in kubernetes.
+This article is the first in a series of articles in which we will see from the developer's point of view how to develop using Quarkus a microservices-based application from scratch to deploy in kubernetes.
 The application proposed is a simple use case of a web application for the management of events related to concerts that I have called "starevent".
-Development code is publicly available from github here <a href="https://github.com/marcelloraffaele/starevent-quarkus">https://github.com/marcelloraffaele/starevent-quarkus</a>. The development has been divided into branches each article has its own branch, this article has the "b1.0-rest" as it will address the development of the basic architecture, the REST services and an example single web page application that will be used as a frontend. The github code for this article is this: <a href="https://github.com/marcelloraffaele/starevent-quarkus/tree/b1.0-rest">https://github.com/marcelloraffaele/starevent-quarkus/tree/b1.0-rest</a>
+Development code is publicly available from github repository: <a href="https://github.com/marcelloraffaele/starevent-quarkus">https://github.com/marcelloraffaele/starevent-quarkus</a>. The development has been divided into branches each article has its own branch, this article has the "b1.0-rest" as it will address the development of the basic architecture, the REST services and an example of web application that will be used as a frontend. The github code for this article is at the repository: <a href="https://github.com/marcelloraffaele/starevent-quarkus/tree/b1.0-rest">https://github.com/marcelloraffaele/starevent-quarkus/tree/b1.0-rest</a>
 
 # Application design
-The application is a simplified version of an event booking system. Let's imagine we want to book a ticket for a concert, we would like to visit a website, see the concert list, choose our concert and reserve our ticket.
+The application is a simplified version of an event booking system. Let's imagine we want to book a ticket for a concert, we would like to visit a website, see the concert list, choose our concert and reserve a ticket.
 We can identify two types of users:
-- admin: manages the available events
-- customer: consult the events and buy tickets.
+- Admin: manages the available events
+- Customer: consult the events and buy tickets.
 
 ![starevent-usecase-diagram]({{site.baseurl}}/assets/img/starevent-quarkus/starevent-usecase-diagram.png)
-
 
 The application could be composed of two microservices that act as backend and deal respectively with the management of events and reservations. Furthermore, to complete the example, we can also provide a frontend to use the entire application.
 
 ![starevent-package-diagram]({{site.baseurl}}/assets/img/starevent-quarkus/starevent-package-diagram.png)
 
-The above diagram shows the service names and expected interactions.
+The above diagram shows the component names and expected interactions.
 - **"starevent-event"** provides services for event management (Create, Read, Update, and Delete)
 - **"starevent-reservation"** provides services for consulting reservations and creating new reservations by interacting with "starevent-event" to decrease the availability of seats in the event.
 - **"starevent-frontend"** uses the services exposed by both backend services.
@@ -43,8 +41,8 @@ There are no database interactions in the diagram as they will be implemented in
 # Project creation
 Each microservice must be independent from the others so they can be seen as separate entities. It must be possible at any time to replace each microservice with a new implementation in another language, with another version of the libraries as long as the communication protocol is respected.
 
-Quarkus allows you to use both Maven and Gradle for java build tool however in this example it will be based on Maven.
-Quarkus provides a number of plugins that help the developer in all stages of development. In this case it is possible to create the projects of our example using "quarkus-maven-plugin".
+Quarkus is fully integrated with Maven and Gradle and provides a number of plugins that help the developer in all stages of development. This article will be based on Maven.
+Using the "quarkus-maven-plugin" the developer have opportunity to start the development from a initialized project structure. Let's create the maven project for our designed components:
 
 {% highlight shell %}
 mvn io.quarkus:quarkus-maven-plugin:1.10.5.Final:create "-DplatformVersion=1.10.5.Final" "-DprojectGroupId=com.rmarcello.starevent" "-DprojectArtifactId=starevent-event" "-DprojectVersion=1.0.0-SNAPSHOT" "-DclassName=com.rmarcello.starevent.EventResource" "-Dpath=/api/events" "-Dextensions=resteasy-jsonb, hibernate-validator"
@@ -54,12 +52,12 @@ mvn io.quarkus:quarkus-maven-plugin:1.10.5.Final:create "-DplatformVersion=1.10.
 mvn io.quarkus:quarkus-maven-plugin:1.10.5.Final:create "-DplatformVersion=1.10.5.Final" "-DprojectGroupId=com.rmarcello.starevent" "-DprojectArtifactId=starevent-frontend" "-DprojectVersion=1.0.0-SNAPSHOT" "-Dextensions=resteasy-qute, rest-client"
 {% endhighlight %}
 
-It is important to note that the Quarkus version used for this example will be 1.10.5.Final as it is the latest version available at this time.
+Notice that the Quarkus version used for this example will be **1.10.5.Final** as it is the latest version available at this time.
 Furthermore, according to the commands defined above, the starevent-event and starevent-reservation projects use the "resteasy-jsonb" extension as we need to implement the two REST services:
-- **/api/events** implemented by the EventResource class
-- **/api/reservation** implemented by the ReservationResource class.
+- **/api/events** implemented by the **EventResource** class
+- **/api/reservation** implemented by the **ReservationResource** class.
 
-For starevent-frontend the "resteasy-qute" extension is a templating engine designed specifically to meet the Quarkus needs. It's still in experimental mode but for this use case can be very useful.
+Finally the maven project starevent-frontend  use the "resteasy-qute" extension that is a template engine designed specifically to meet the Quarkus needs. It’s still in experimental mode but for this use case can be a good opportunity to test it.
 
 # Development
 This is the funniest part. Quarkus provides a mode called **"live coding"** that allows you to start the application using the command:
@@ -69,7 +67,17 @@ mvn compile quarkus:dev
 and every code change will be quickly be ready in the application without need to manually rebuild the application. This feature is one of the most popular as it allows you to optimize development times.
 
 ## Configuration files
-As defined in the diagram, we must configure the listening port of our services otherwise we will not be able to test it with live coding because Quarkus by default starts on port 8080. In addition we will enable CORS in this way the frontend can access the services content from different domain. We can change this configuration modifying the application.properties file.
+By default, Quarkus reads the application.properties file from the folder "src/main/resources/". We can use this file to configure quarqus libraries and for our application properties.
+
+If we start more than one poject with default configurations we could get an error because the Quarkus defaul listening port is 8080.
+For this reason we must define the listening port of each service. We can choose the following ports:
+- starevent-frontend: 8080
+- starevent-event: 8081
+- starevent-reservation: 8082
+
+In addition we will enable CORS in this way the frontend can access the services content from different domain.
+
+We can change this configuration modifying the application.properties file.
 
 - the starevent-event application.properties file
 {% highlight shell %}
@@ -89,7 +97,7 @@ we don't need changes in starevent-frontend application.properties file because 
 ## The EventResource class
 
 Let's start defining the implementation of the EventResource class. It implements all the services related to the "event" resource.
-The EventResource specify that it serve the path "/api/events" and that it produces and consumes usign json format. Behind the scenes Quarkus implements this job using the resteasy-jsonb libraries that we specified in the pom.xml.
+The source code starts specifing that it consumes requests and produce responses using json format for the path "/api/events". Behind the scenes Quarkus implements this job using the resteasy-jsonb libraries that we specified as extension during project creation.
 Inside the class, we can see that it uses the injected instance of EventService class. In this way there's a separation between REST service and business logic.
 
 
@@ -171,7 +179,7 @@ public class EventResource {
 {% endhighlight %}
 
 ## The Event class
-Is a simple Pojo object that will be used by Jsonb to serialize and deserialize the request and the answer of the Rest service and will be stored by the EventService. It contains all the information of an Event and some annotations that can be used by quarkus-hibernate-validator to validate the bean.
+Is a simple Pojo object that will be used by Jsonb to serialize and deserialize the request and the respones of the Rest service and will be stored by the EventService. It contains all the information of an Event and some annotations that can be used by quarkus-hibernate-validator to validate the bean.
 
 {% highlight java %}
 public class Event {
@@ -211,8 +219,9 @@ public class Event {
 {% endhighlight %}
 
 ## The EventService class
-The EventService is the logic of the application, it does the dirty work. In this first article there's no database and the data will be keep in memory using a simple HashMap.
-Here is important the @ApplicationScoped annotation that tell to Quarkus that can use this bean for CDI.
+The EventService represents the logic of the rest service, it does the dirty job. 
+For this article it was chosen to leave the implementation as simple as possible and to avoid adding the interaction with the database to facilitate understanding of the CDI and REST services. There's no database and the data will be keep in memory using a simple HashMap.
+The **@ApplicationScoped** annotation that tell to Quarkus that can use this bean for CDI.
 
 {% highlight java %}
 @ApplicationScoped
@@ -247,9 +256,10 @@ public class EventService {
 {% endhighlight %}
 
 
-## test the EventResource
-There are two main method for test an API.
-The first is to invoke the service using "curl command" during live coding:
+## Test the EventResource
+There are two main method for test an API using Quarkus.
+
+The first is to run the application and invoke the service using "curl command" during live coding:
 
 {% highlight shell %}
 //get a random event
@@ -291,8 +301,9 @@ Location: http://localhost:8081/api/events/11
 connection: close
 {% endhighlight %}
 
-The second way to test the api is to develop a JUnit test and test invoking it during maven builds.
-Quarkus support JUnit 5 and is very simple to implement tests, the folowing example use the library rest-assured.
+The second way to test the REST API is to develop a JUnit test suite. It will be executed always during during maven builds.
+Quarkus support **JUnit 5** and is very simple to implement tests, define mocks using CDI and verify the the HTTP response.
+The following example use the library **rest-assured**:
 
 {% highlight java %}
 @QuarkusTest
@@ -325,8 +336,7 @@ public class EventResourceTest {
 
 ## The ReservationResource class
 The ReservationResource implements all the services related to the "reservation" resource.
-The ReservationResource specify that it serve the path "/api/reservation" and that it produces and consumes usign json format. 
-Also here it's injected an instance of ReservationService class that implements the business logic.
+The source code specify that the service will listen on path "/api/reservation" and use an injected instance of ReservationService class that implements the business logic.
 
 {% highlight java %}
 @Path("/api/reservation")
@@ -434,14 +444,14 @@ public interface EventsProxy {
 {% endhighlight %}
 
 ## The starevent-frontend
-The purpose of this article was to define a microservices architecture however to complete the usecase it was decided to implement a frontend application to show the functioning of the api also on a web interface. The application is a web application developed using the Qute extension. Qute is a templating engine that make web development very fast in Quarkus. The API combines both the imperative and the non-blocking reactive style of coding.
+The starevent-frontend is a web application developed using the Qute extension. Qute is a templating engine that make web development very fast in Quarkus, it provides API that combines both the imperative and the non-blocking reactive style of coding.
 
-The development is very easy, I defined a Resource that maps three http path each one use a template:
+The development is very easy, I defined a Resource that maps three http path each one use a different template:
 - **"/"**: map the index page
 - **"/moreinfo"**: map the more info page
 - **"/reserve"**: map the reservation page.
 
-Every time that a page is requested, the service invoke the client and render the result using the template.
+Every time that a page is requested, the Resource invoke the client and render the result using the template.
 
 {% highlight java %}
 @Path("/")
@@ -492,15 +502,28 @@ public class IndexResource {
 }
 {% endhighlight %}
 
-If we open a browser and visit **http://127.0.0.1:8080** we will see the frontend application. Now we can view all the availabe events, discover details and reserve a ticket:
+If we open a browser and visit **http://127.0.0.1:8080** we will see the frontend application, we can view all the availabe events, discover details and reserve a ticket:
 
 ![starevent-frontend-1]({{site.baseurl}}/assets/img/starevent-quarkus/starevent-frontend-1.png)
 
+
+Now that the development is completed we can think on how to run the entire application in an environment ready for production.
+
 # DOCKER BUILDS
-When we created the projects with **io.quarkus:quarkus-maven-plugin**, quarkus created automatically the folder "/src/main/docker" that contains three files:
+When we created the projects with **io.quarkus:quarkus-maven-plugin**, Maven created automatically the folder "/src/main/docker" that contains three files:
 - Dockerfile.jvm: builds a container that runs the Quarkus application in JVM mode
 - Dockerfile.fast-jar: builds a container that runs the Quarkus application in JVM mode with some optimizations for faster boot
 - Dockerfile.native: builds a container that runs the Quarkus application in native (no JVM) mode.
+
+You can execute manually this dockerfiles choosing the preferred version.
+
+An alternative way to build the images is to use the Quarkus **"container-image-docker"** extension. We need to add inside our pom the extension dependency:
+{% highlight java %}
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-container-image-docker</artifactId>
+</dependency>
+{% endhighlight %}
 
 If you want to choose the package type, you can set the property inside the application.properties. If not defined, by default the value is **"jar"**.
 {% highlight shell %}
@@ -508,16 +531,7 @@ If you want to choose the package type, you can set the property inside the appl
 quarkus.package.type=fast-jar
 {% endhighlight %}
 
-You can execute manually this dockerfiles choosing the preferred version.
-Another way to build this image is to use another quarkus extension.
 
-The first thing that is needed is to add inside our pom the dipendency:
-{% highlight java %}
-<dependency>
-    <groupId>io.quarkus</groupId>
-    <artifactId>quarkus-container-image-docker</artifactId>
-</dependency>
-{% endhighlight %}
 
 To be sure of image group and tag to use we should define it inside application.properties otherwise by default the created image will have the os user as group and the pom version as tag.
 {% highlight shell %}
@@ -541,7 +555,7 @@ rmarcello/starevent-event            1.0-rest     7a5c3ea832b7   42 hours ago   
 {% endhighlight %}
 
 This means that our images are ready and we can test everything on Docker!!!
-Let's create a docker-compose.yaml:
+Let's create a **docker-compose.yaml**:
 {% highlight yaml %}
 version: "3"
 services:
@@ -573,7 +587,9 @@ services:
 
 {% endhighlight %}
 
-and in the same folder start docker compose:
+Notice the definition of three services, for each one the image, the port mapping, the dependency (useful for start order) and the environment variables for REST Clients.
+
+From the same folder of the yaml file, start docker compose:
 {% highlight shell %}
 docker-compose -f docker-compose.yaml up -d
 {% endhighlight %}
@@ -612,10 +628,10 @@ First of all let's add this dependency inside the pom of each maven project.
 {% endhighlight %}
 
 By adding these dependencies, Quarkus will automatically generate Kubernetes manifests (in yaml and json format) each time we perform a build in the **target/kubernetes/** directory.
-This will create three "kubernetes.yml" files that we can use as template for our deployment. Each generated yaml file have a deployment and a service object.
+This will generate three "kubernetes.yml" files that we can use as template for our deployment. Each generated yaml file have a deployment and a service object.
 We can start from that file, add or modify some informations as we like, for example we can add some labels or annotations and don't forget to setup the environment variable that we must specify to configure the rest clients.
 
-The following is my application.yaml file:
+The following is my **application.yaml** file:
 {% highlight yaml %}
 ---
 #starevent-event
@@ -814,6 +830,8 @@ spec:
           protocol: TCP
 {% endhighlight %}
 
+Notice the definition of three Deployments and three Services. The service act as Load Balancer for HTTP Clients in this way each deployment can tranparently scale with multiple replica.
+
 Now that we have defined the kubernetes manifest for the entire application, we can apply it to kubernetes:
 
 {% highlight shell %}
@@ -853,7 +871,8 @@ When you have finished you can clean it using the following command:
 kubectl delete -f application.yaml
 {% endhighlight %}
 
-
+# Conclusion
+I think Quarkus is a great Java stack to produce Cloud Native application with extreme speed and simplicity. It helps developers to produce cutting-edge solutions quickly. I really appreciated the live coding feature and the existence of the many extensions and plug-ins that solve the most common problems in an elegant way. I really liked the Cloud Native orientation with the possibility to create native builds, optimize the time and memory used and facilitate integration with Docker and Kubernetes.
 
 # Resources
 If you want to learn more:
