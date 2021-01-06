@@ -118,7 +118,7 @@ public class EventResource {
 
     @GET
     @Path("/random")
-    public Response getRandomBook() {
+    public Response getRandomEvent() {
         Event e = service.getRandomEvent();
         return Response.ok(e).build();
     }
@@ -150,7 +150,7 @@ public class EventResource {
 
     @DELETE
     @Path("/{id}")
-    public Response deleteBook( @PathParam("id") Long id ) {
+    public Response deleteEvent( @PathParam("id") Long id ) {
         service.deleteEvent(id);
         return Response.noContent().build();
     }
@@ -472,7 +472,7 @@ public class IndexResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public TemplateInstance get() {
-        Event randomEvent = eventClient.getRandomBook();
+        Event randomEvent = eventClient.getRandomEvent();
         List<Event> eventList = eventClient.all();
         return index
                 .data("eventList", eventList )
