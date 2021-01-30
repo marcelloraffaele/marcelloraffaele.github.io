@@ -656,18 +656,18 @@ Creating starevent-grafana     ... done
 
 You can see the frontend visiting [http://127.0.0.1:8080](http://127.0.0.1:8080):
 
-![frontend]({{site.baseurl}}/assets/img/starevent-quarkus-2/frontend-example-1.png)
+![frontend]({{site.baseurl}}/assets/img/starevent-quarkus-2/frontend-docker-1.png)
 
 
 You can see the prometheus page visiting [http://127.0.0.1:9090](http://127.0.0.1:9090):
 
-![prometheus]({{site.baseurl}}/assets/img/starevent-quarkus-2/prometheus-example-1.png)
+![prometheus]({{site.baseurl}}/assets/img/starevent-quarkus-2/prometheus-docker-1.png)
 
 Notice as targets of the developed services.
 
 You can see the grafana page visiting [http://127.0.0.1:3000](http://127.0.0.1:3000) and set default user and password (admin/admin):
 
-![grafana]({{site.baseurl}}/assets/img/starevent-quarkus-2/grafana-example-1.png)
+![grafana]({{site.baseurl}}/assets/img/starevent-quarkus-2/grafana-docker-1.png)
 
 
 When we have finished our tests, we can clean up:
