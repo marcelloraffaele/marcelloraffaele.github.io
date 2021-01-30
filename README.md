@@ -1,7 +1,7 @@
 
 command:
 
-to build locally
+to run locally
 ```
 bundle exec jekyll serve
 ```
