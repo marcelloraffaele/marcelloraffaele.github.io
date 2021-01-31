@@ -8,21 +8,21 @@ fig-caption: starevent-quarkus-2/starevent-quarkus.png
 tags: [quarkus, quarkusio, microservices, docker, kubernetes, java, prometheus, grafana, mysql]
 ---
 
-During the [previous article](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-1/) I talked about how was quick and simple to make a small microservices architecture using Quarkus as Cloud Native Stack. I presented an example application and built it from scratch to deploy on Kubernetes. It was very positive experience because Quarkus give to the developer a set of extensions and plugins that give the opportunity to use the fresher technology in a very productively way making easy the developer's life.
+During the [previous article](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-1/) I talked about how was quick and simple to make a small microservices architecture using Quarkus as Cloud Native Stack. I presented an example application and built it from scratch to deploy on Kubernetes. It was a very positive experience because Quarkus give to the developer a set of extensions and plugins that give the opportunity to use the fresher technology in a very productively way making easy the developer's life.
 
-In this article I want to extend the application exploring other useful Quarkus extensions. When we work with distributed systems and mainly with microservices we have a quantity of deployments spread in the on-promises, cloud or hibrid network. This scenario give us the opportunity to elastically react to load changes, implement high availability and optimize our costs. But this makes the architecture more complex because in general we couldn't know how many instance of a service are running in a determined moment and where this services are running. Some of this services could become unhealty and we would like to react replacing unhealty instances with new one. Another important aspect is the readyness of the service because this services could dinamically startup and shutdown and tipically the startup isn't instantanious. It become important to understand if the service is "ready" to work.  Healthness and Readiness are very important when we install our aplications inside an orchestrator like Kubernetes because it uses this information to manage the workloads.
-We could also be interested on custom metrics to have informations and statistics about time elapsed or number of invocations. Metrics are very useful to monitor performance, predict bad trends, tune components and solve bottlenecs. For the same reason, collect metrics is complicated in a dynamic environment because the number of service and the ip and port of them change continuosly.
+In this article I want to extend the application exploring other useful Quarkus extensions. When we work with distributed systems and mainly with microservices we have a quantity of deployments spread in the on-promises, cloud or hybrid network. This scenario give us the opportunity to elastically react to load changes, implement high availability and optimize our costs. But this makes the architecture more complex because in general we couldn't know how many instance of a service are running in a determined moment and where these services are running. Some of these services could become unhealthy and we would like to react replacing unhealthy instances with a new one. Another important aspect is the readiness of the service because these services could dynamically start up and shutdown and typically the startup isn't instantaneous. It becomes important to understand if the service is "ready" to work.  Healthiness and Readiness are very important when we install our applications inside an orchestrator like Kubernetes because it uses this information to manage the workloads.
+We could also be interested on custom metrics to have information and statistics about time elapsed or number of invocations. Metrics are very useful to monitor performance, predict bad trends, tune components and solve bottlenecks. For the same reason, collect metrics is complicated in a dynamic environment because the number of service and the address and port of them change continuously.
 
-From the developer point of view, these are common problems for this reason there are standard that address it. The Eclipse MicroProfile project defines MicroProfile Metrics and Health specifications that are implemented in Quarkus. For more information about MicroProfile visit the site: [microprofile.io](https://microprofile.io).
+From the developer point of view, these are common problems for this reason there are standard that address it. The Eclipse MicroProfile project defines MicroProfile Metrics and Health specifications that are implemented in Quarkus. For more information about MicroProfile visit the web site: [microprofile.io](https://microprofile.io).
 
-To give a complete understanding of what kind of advantages gives to apply to solid standard to monitor metrics I will show also how this metrics can be practically collected by a Prometheus application inside kubernetes and graphically shown by Grafana.
+To give a complete understanding of what kind of advantages gives to apply to solid standard to monitor metrics I will show also how this metrics can be practically collected by a Prometheus application inside Kubernetes and graphically shown by Grafana.
 
-Last but not least, we will quicly add a database to our services using Quarkus extensions adding to the application also the persistence layer.
+Last but not least, we will quickly add a database to our services using Quarkus extensions adding to the application also the persistence layer.
 
-The source code of this article is repositored at: [https://github.com/marcelloraffaele/starevent-quarkus/tree/b1.1-monitoring](https://github.com/marcelloraffaele/starevent-quarkus/tree/b1.1-monitoring)
+To download the complete source code of this article clone the following repository: [https://github.com/marcelloraffaele/starevent-quarkus/tree/b1.1-monitoring](https://github.com/marcelloraffaele/starevent-quarkus/tree/b1.1-monitoring)
 
 # The architecture
-The application is a simplified version of an event booking system. Our customers want to book tickets for available concert. The frontend of our application must be available 24/7 and must quicly react to failures. In addition we want to monitor the application and send notification using prometheus and create daily reports on traffic and resource usage statistics usign grafana.
+The application is a simplified version of an event booking system. Our customers want to book tickets for available concert. The frontend of our application must be available 24/7 and must quickly react to failures. In addition we want to monitor the application and send notification using Prometheus and create daily reports on traffic and resource usage statistics using Grafana.
 
 The desired architecture is the following:
 
@@ -35,9 +35,9 @@ The MicroProfile Health Check specification defines a single container runtime m
 The MicroProfile Health Check consists of two **/health/ready** and **/health/live**
 endpoints that respectively represent the readiness and the liveness of
 the entire runtime.
-The specification semplified the developer work because is only necessary to:
-- create an implementation of **HealthCheck** functional interface
-- annotate the code with: **@Liveness** for health check or **@Readiness** readiness check.
+The specification simplified the developer work because it is only necessary to:
+- Create an implementation of **HealthCheck** functional interface
+- Annotate the code with: **@Liveness** for health check or **@Readiness** readiness check.
 
 To enable the health check inside the project is needed to add the **smallrye-health** quarkus extension inside the pom.xml:
 {% highlight xml %}
@@ -48,7 +48,7 @@ To enable the health check inside the project is needed to add the **smallrye-he
 </dependency>
 {% endhighlight %}
 
-And implement the Health check components for **leaveness**:
+And implement the Health check components for **liveness**:
 
 {% highlight java %}
 //complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/starevent-event/src/main/java/com/rmarcello/starevent/health/PingEventResourceHealthCheck.java
@@ -93,7 +93,7 @@ public class DatabaseConnectionHealthCheck implements HealthCheck {
 }
 {% endhighlight %}
 
-Notice that for readiness, I decided to implement a query on database that only if successfull will consider the service ready.
+Notice that for readiness, I decided to implement a query on the database that only if successful will consider the service ready.
 
 If we want to verify if health checks are working, we can run the application and invoke HTTP GET request on **/health/ready** and **/health/live** endpoints:
 
@@ -132,18 +132,18 @@ curl -X GET "http://localhost:8081/health/ready"
 }
 {% endhighlight %}
 
-Later in te article I will show how to use these endpoints to implement Kubernetes Liveness and Readiness Probes.
+Later in the article I will show how to use these endpoints to implement Kubernetes Liveness and Readiness Probes.
 
 # MicroProfile Metrics
-Reliable service of a platform needs monitoring and the Microprofile Metrics specification defines a standard with respect to (base) API path, data types involved, always available metrics and return codes used.
-Metrics are different from health checks. Health check are primarily targets at quick yes/no response. Metrics can help to determine the level of health of a service and provide long term trend data for capacity planning and pro-active discovery of issues. Metrics can also help scheduling systems to decide whe to scale the application to run on more or fewer machines.
-The MicroProfile Metrics specification defines three kind of metrics:
+Reliable service of a platform needs monitoring and the MicroProfile Metrics specification defines a standard with respect to (base) API path, data types involved, always available metrics and return codes used.
+Metrics are different from health checks. Health check are primarily targets at quick yes/no response. Metrics can help to determine the level of health of a service and provide long term trend data for capacity planning and pro-active discovery of issues. Metrics can also help to schedule systems to decide when to scale the application to run on more or fewer machines.
+The MicroProfile Metrics specification defines three kinds of metrics:
 - base: metrics that all MicroProfile vendors have to provide. Are exposed under **/metrics/base**.
 - vendor: vendor specific metrics (optional). Each implementation can define own specific metrics on top of the basic set of required metrics. Are exposed under **/metrics/vendor**.
 - application: application-specific metrics (optional). The developer can implement the own metrics using the API. Application specific metrics are exposed under **/metrics/application**.
 
-MicroProfile Metrics provides a way to register Application-specific metrics to allow applications to expose metrics in the application scope. The metrics registration can be done using annotations or programmatically and create new metrics dynamically at runtime.
-There are different type of Annotation that can be used, here the list:
+MicroProfile Metrics provides a way to register Application-specific metrics to allow applications to expose metrics in the application scope. The metrics registration can be done using annotations or programmatically to create new metrics dynamically at runtime.
+There are different type of Annotation that can be used, here is the list of the main ones:
 - **@Counted**: Denotes a counter, which counts the invocations of the annotated object.
 - **@Gauge**: Denotes a gauge, which samples the value of the annotated object.
 - **@Metered**: Denotes a meter, which tracks the frequency of invocations of the annotated object.
@@ -151,7 +151,7 @@ There are different type of Annotation that can be used, here the list:
 
 For the full list see the documentation at: [microprofile-metrics-spec-2.3](https://github.com/eclipse/microprofile-metrics/releases/download/2.3/microprofile-metrics-spec-2.3.pdf)
 
-To add custom metrics on our project, we neeed to add the metrics extension:
+To add custom metrics on our project, we need to add the metrics extension:
 {% highlight xml %}
 <!-- complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/starevent-event/pom.xml -->
 <dependency>
@@ -160,7 +160,7 @@ To add custom metrics on our project, we neeed to add the metrics extension:
 </dependency>
 {% endhighlight %}
 
-Using these dependency we can add annotations on the resource methods to implement desired metrics:
+Using this dependency we can add annotations on the resource methods to implement desired metrics:
 
 {% highlight java %}
 //complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/starevent-event/src/main/java/com/rmarcello/starevent/service/EventService.java
@@ -189,7 +189,7 @@ public class EventResource {
     }
 {% endhighlight %}
 
-Notiche that @Counted annotation is the simplest one and monitor only the invocations count. The @Timed annotation is the most complete, it work also as counter.
+Notice that @Counted annotation is the simplest one and monitor only the invocations count. The @Timed annotation is the most complete, it works also as counter.
 
 To see the result of this quick implementation we can run the application and run:
 {% highlight bash %}
@@ -261,7 +261,7 @@ curl -X GET "http://localhost:8081/metrics/application" -H  "accept: application
 {% endhighlight %}
 
 Ok it was easy to build these metrics but now what I can do with this data?
-The power of use a standard is that we talk a language that everyone that adhere the same standard can undarstand. There are open source projects that understand this metric format and can collect it. Let's talk about Prometheus and Grafana.
+The power of use a standard is that we talk a language that everyone that adhere to the same standard can understand. There are open source projects that understand this metric format and can collect it. Let's talk about Prometheus and Grafana.
 
 # Prometheus and Grafana
 Prometheus is an open-source systems monitoring and alerting toolkit. Many companies and organizations have adopted Prometheus, and the project has a very active developer and user community. It is now a standalone open source project and maintained independently of any company.
@@ -272,18 +272,18 @@ Prometheus's main features are:
 - time series collection happens via a pull model over HTTP or in a push model using gateways
 - targets are discovered via service discovery or static configuration.
 
-In practice Prometheus can discover our service and collect time series of metrics. We can configure prometheus jobs defining "scrapes" metrics, either directly or via an intermediary push gateway for short-lived jobs. It stores all scraped samples locally and runs rules over this data to either aggregate and record new time series from existing data or generate alerts.
-Prometheus have minimal UI that can be used to query data and create basic graph. Grafana or other API consumers can be used to visualize the collected data.
+In practice Prometheus can discover our service and collect time series of metrics. We can configure Prometheus jobs defining "scrapes" metrics, either directly or via an intermediary push gateway for short-lived jobs. It stores all scraped samples locally and runs rules over this data to either aggregate and record new time series from existing data or generate alerts.
+Prometheus has minimal UI that can be used to query data and create basic graphs. Grafana or other API consumers can be used to visualize the collected data.
 
 
 Grafana is open source visualization and analytics software. It allows you to query, visualize, alert on, and explore your metrics no matter where they are stored.
-Grafana includes built-in support for Prometheus. Is possible to create a grafana data source that connect to prometheus and give the possibility to continuosly query its data.
+Grafana includes built-in support for Prometheus. It is possible to create a Grafana data source that connect to Prometheus and give the possibility to continuously query its data.
 
-This article shows the basic configuration of prometheus and grafana in order to show how can extract important information from our Microprofile metrics.
+This article shows the basic configuration of Prometheus and Grafana in order to show how it can extract important information from our MicroProfile metrics.
 
 ## Prometheus configuration
-If we need a basic onfiguration for Prometheus, is necessary to define a **prometheus.yml** and specify the scrapre interval and job definitions.
-The following axample defines a job for each startevent services:
+If we need a basic configuration for Prometheus, it is necessary to define a **prometheus.yml** file and specify the scrape interval and job definitions.
+The following example defines a job for each "startevent" services:
 {% highlight yaml %}
 #complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/docker/monitoring/prometheus.yml
 global:
@@ -300,9 +300,9 @@ scrape_configs:
       - targets: ['starevent-reservation:8082']
 {% endhighlight %}
 
-Prometheus configurations are very powerful and inside a kuberetes environment it retrieve scrape targets from kubernetes REST API and always staying synchrinized with the cluster state.
+Prometheus's configurations are very powerful and inside a Kuberetes environment it can retrieve scrape targets from Kubernetes REST API and always staying synchronized with the cluster state.
 
-Here the example for **prometheus.yml** that will be used later with kubernetes:
+Here is the example for **prometheus.yml** that will be used later with Kubernetes:
 {% highlight yaml %}
 #complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/kubernetes/monitoring.yaml
 global:
@@ -325,10 +325,10 @@ scrape_configs:
         action: replace
         target_label: app_kubernetes_io_version
 {% endhighlight %}
-Notice that prometheus give also the possibility to extract labels and annotations information from kubernetes object that can be used inside metrics.
+Notice that Prometheus give also the possibility to extract labels and annotations information from kubernetes object that can be used inside metrics.
 
 ## Grafana configuration
-A basic grafana configuration is composed of a datasource and dashboard. It has also a good and quick UI and is possible to create this configuration ex-novo. Anyway for this example I decided to define a prepared datasource that read from prometheus endpoint:
+A basic Grafana configuration is composed of a data source and dashboard. It has also a good and quick UI and is possible to create this configuration ex-novo. Anyway for this example I decided to define a prepared data source that read from Prometheus endpoint:
 
 {% highlight yaml %}
 #complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/docker/monitoring/grafana-ds.yaml
@@ -344,18 +344,18 @@ datasources:
     url: http://prometheus:9090
 {% endhighlight %}
 
-In practice it defines datasource type (prometheus), the hostname and port of prometheus service.
+In practice it defines data source type (Prometheus), the hostname and port of Prometheus service.
 
 If you are interested on a prepared dashboard, see it from this link [grafana-dashboard.json](https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/docker/monitoring/grafana-dashboard.json).
 
 
 # Integration with the Database
-First of all we need to consider that every microservice should have a own database to avoid dependency. For this reason I will create only one instance of MySQL engine and two different database inside:
-- **eventdb**: the database for the Event Micorservice
-- **reservationdb**: the database for the Reservation Micorservice
+First we need to consider that every microservice should have an own database to avoid dependency. For this reason I will create only one instance of MySQL engine and two different database inside:
+- **eventdb**: the database for the Event Microservice
+- **reservationdb**: the database for the Reservation Microservice
 
 ## Database creation
-To create the database and initialize its structure, is possible to execute a prepared SQL script after the database creation or to configure the application to update/create the database structure as needed. Personally I don't like to leave the application the possibility to change the database structure but I prefer to have the full control on it. For this reason I created a script that initialize the database structure and must be launched after database creation.
+To create the database and initialize its structure, it is possible to execute a prepared SQL script after the database creation or to configure the application to update/create the database structure as needed. Personally I don't like to leave the application the possibility to change the database structure but I prefer to have the full control on it. For this reason I created a script that initialize the database structure and must be launched after database creation.
 
 {% highlight sql %}
 --complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/docker/dbinit/1_ddl.sql
@@ -385,7 +385,7 @@ CREATE TABLE `event` (
 {% endhighlight %}
 
 ## Quarkus database integration
-There are two main way to implement JPA in Quarkus. One is the classic JPA using Hibernate. The second is to use Panache that extends Hibernate to provide new interesting access that we will see later. I want to show you Panache and for this reason we need to add the Panache extension and MySQL library to the pom.xml:
+There are two main way to implement JPA in Quarkus. One is the classic JPA using Hibernate. The second is to use Panache that extends Hibernate to provide new interesting pattern for data access that we will see later. In the course of this article I will show the Hibernate extension with panache. For this reason we need to add the Panache extension and MySQL library to the pom.xml:
 {% highlight xml %}
 <!-- complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/starevent-event/pom.xml -->
 <dependency>
@@ -398,7 +398,7 @@ There are two main way to implement JPA in Quarkus. One is the classic JPA using
 </dependency>
 {% endhighlight %}
 
-Now that we have the libraries, we need to specify some properties to configure the database interaction. To do this, add to the **application.properties** file following lines:
+Now that we have the libraries, we need to specify some properties to configure the database interaction. To do this, add to the **application.properties** file the following lines:
 {% highlight shell %}
 #complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/starevent-event/src/main/resources/application.properties
 #database
@@ -414,7 +414,7 @@ Notice that **quarkus.hibernate-orm.database.generation=none** means that I don'
 The Panache library offers both the classical "repository pattern" and the "active record pattern".
 
 ## Repository pattern
-The repository pattern is a classic, we need to create the repository class that implements the **PanacheRepository** interface that will autmatically give a set of already implemented methods to find, list, stream, count, delete, persist and update entity objects.
+The repository pattern is a classic, we need to create the repository class that implements the **PanacheRepository** interface that will automatically give a set of already implemented methods to find, list, stream, count, delete, persist and update entity objects.
 The following fragment of code shows a practical example inside the EventRepository.class:
 {% highlight java %}
 //complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/starevent-event/src/main/java/com/rmarcello/starevent/repository/EventRepository.java
@@ -437,7 +437,7 @@ public class EventRepository implements PanacheRepository<Event> {
 }
 {% endhighlight %}
 
-Notice that if the default methods aren't enough we can implement other methods using the exsisting as I did for **listAvailableEvents** and **findRandom**.
+Notice that if the default methods aren't enough we can implement other methods using the existing as I did for **listAvailableEvents** and **findRandom**.
 It is possible to inject the repository inside our EventService and use it directly:
 {% highlight java %}
 //complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/starevent-event/src/main/java/com/rmarcello/starevent/service/EventService.java
@@ -475,7 +475,7 @@ public class EventService {
 Using the **@Transactional** annotation is possible to define the transaction management of this methods. Here by default was choosen **Transactional.TxType.REQUIRED** and for reads **Transactional.TxType.SUPPORTS**.
 
 ## Active record pattern
-The active record pattern wants to semplify the developer life making the code more readable and clear. This pattern propose to write only the code that is needed and take advantage of the Panache Library. We create the entity class and extends PanacheEntity. Successively is needed to declare the fields as public adding JPA annotation where needed. If the default methods that PanacheEntityBase abstract class define aren't enough we can implement other util methods ( see the getAllByUserId method ).
+The active record pattern wants to simplify the developer life making the code more readable and clear. This pattern proposes to write only the code that is needed and take advantage of the Panache Library. We create the entity class and extends PanacheEntity. Successively is needed to declare the fields as public adding JPA annotation where needed. If the default methods that PanacheEntityBase abstract class define aren't enough we can implement other utility methods ( see the getAllByUserId method ).
 Here's an example:
 
 {% highlight java %}
@@ -552,23 +552,23 @@ It is difficult to say which model is better because they both solve the problem
 I found very useful to iteratively create and test the architecture on my local machine using Docker.
 Starting from the database layer, I used docker to initialize and run a database that I used during development taking advantage of Quarkus "live coding".
 
-Docker gave me the opportunity to create/test/destroy the environment any time I wanted. Containers need few resources and I could have everything on my computer.
+Docker gave me the opportunity to create/test/destroy the environment any time I wanted. Containers need few resources and I could have everything running locally on my computer.
 
 To work with containers is essential to read the documentation on [Docker Hub](https://hub.docker.com).
 
-For example at the [mysql docker offical image](https://hub.docker.com/_/mysql) I understood how to configure a MySQL container, how to run a command line client, how to setup environment variables and initialize the database with custom sql scripts.
+For example at the [mysql docker official image](https://hub.docker.com/_/mysql) I understood how to configure a MySQL container, how to run a command line client, how to set up environment variables and initialize the database with custom sql scripts.
 
 
-If you makes change to the source code remeber to build the application images usign the command:
+If you make change to the source code remember to build the application images using the command:
 {% highlight shell %}
 mvn package -Dquarkus.container-image.build=true
 {% endhighlight %}
 And to push images to the remote repository.
 
-Otherwise you can use the images that i pushed as public on [hub.docker.com](https://hub.docker.com).
+Otherwise, you can use the images that I pushed as public on [hub.docker.com](https://hub.docker.com).
 
 
-At the end of this iterative process I created a docker compose descriptor that create a minimal set of container that implement the architecture:
+At the end of this iterative process I created a docker compose descriptor that create a minimal set of containers that implement the architecture:
 
 {% highlight yaml %}
 #complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/docker/docker-compose.yaml
@@ -659,13 +659,13 @@ You can see the frontend visiting [http://127.0.0.1:8080](http://127.0.0.1:8080)
 ![frontend]({{site.baseurl}}/assets/img/starevent-quarkus-2/frontend-docker-1.png)
 
 
-You can see the prometheus page visiting [http://127.0.0.1:9090](http://127.0.0.1:9090):
+You can see the Prometheus page visiting [http://127.0.0.1:9090](http://127.0.0.1:9090):
 
 ![prometheus]({{site.baseurl}}/assets/img/starevent-quarkus-2/prometheus-docker-1.png)
 
 Notice as targets of the developed services.
 
-You can see the grafana page visiting [http://127.0.0.1:3000](http://127.0.0.1:3000) and set default user and password (admin/admin):
+You can see the Grafana page visiting [http://127.0.0.1:3000](http://127.0.0.1:3000) and set default user and password (admin/admin):
 
 ![grafana]({{site.baseurl}}/assets/img/starevent-quarkus-2/grafana-docker-1.png)
 
@@ -676,16 +676,16 @@ docker-compose -f docker-compose.yaml down
 {% endhighlight %}
 
 # Put all together into Kubernetes
-To complete this article I need to show you how to bring everything on kubernetes, how prometheus dinamically adapt to the architectural changes and how we can take advantage of metrics using grafana.
+To complete this article I need to show you how to bring everything on Kubernetes, how Prometheus dynamically adapt to the architectural changes and how we can take advantage of metrics using Grafana.
 
 Using Kubernetes objects the architecture becomes something like this:
 
 ![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/kubernetes-architecture.png)
 
-Now the architecture is a bit more complex. Every service is run using deployment. In front of each deployment there's a service that works like a load balancer. Whereever there's need to store sensible informations ( passwords ) I use secrets whereas use config maps for configurations.
+Now the architecture is a bit more complex. Every service is run using deployment. In front of each deployment there's a service that works like a load balancer. Wherever there's need to store sensible information ( passwords ) I use secrets whereas use config maps for configurations.
 
 ## Persistence Layer
-During last chapter was presented a basic setup that can be very useful during development. The solution can be improved. Is possible to create a deployment to deploy a single replica for mysql database. The configuration of database singleton pod is made using **secrets** to manage the database passwords and **config map** to keep the database initialization scripts. The following descriptor shows the database-config.yaml file:
+During the last paragraph was presented a basic setup that can be very useful during development. The solution can be improved. It is possible to create a deployment to deploy a single replica for mysql database. The configuration of the database singleton pod is made using **secrets** to manage the database passwords and **config map** to keep the database initialization scripts. The following descriptor shows the database-config.yaml file:
 
 {% highlight yaml %}
 #complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/kubernetes/database-config.yaml
@@ -715,13 +715,13 @@ data:
 {% endhighlight %}
 
 
-For a persistence layer, data persistence is crucial for this reason it's needed to mount a persistent volume defining a persistent volume claim. The **init.sql** file is executed only at the first start of the container. Even if a restart occour, using the mounted persistent volume the container will understand that the database is already initialized and will restore data from the volume.
+For a persistence layer, data persistence is crucial for this reason it's needed to mount a persistent volume defining a persistent volume claim. The **init.sql** file is executed only at the first start of the container. Even if a restart occur, using the mounted persistent volume the container will understand that the database is already initialized and will restore data from the volume.
 
-Notice that this solution is simple and cheap but it is good only for test environment. If is needed to go in production I suggest to use a more scalable and reliable solution. Most Cloud provider offer database solution that can better address these problems and can be easily integrated into Kubernetes.
+Notice that this solution is simple and cheap, but it is good only for test environment. If it's needed to go in production I suggest using a more scalable and reliable solution. Most cloud provider offer database solution that can better address these problems and can be easily integrated into Kubernetes.
 
 ## Application layer
-For this task, we take advantage of the quarkus kubernetes extension that automatically creates the 99% if kubernates.yaml file. It understand that we added health and metrics extensions and add in the kubernetes descriptor:
-- **annotations** that can be used by prometheus to select the pod
+For this task, we take advantage of the Quarkus Kubernetes extension that automatically creates the 99% of the kubernates.yaml file. It understands that we added health and metrics extensions to the project and adds in the Kubernetes descriptor:
+- **annotations** that can be used by Prometheus to select the pod
 - **livenessProbe** and **readinessProbe** already configured on the right endpoint and port
 - **service** that simplify the connection with other applications.
 
@@ -806,8 +806,8 @@ spec:
 {% endhighlight %}
 
 ## Monitoring layer
-For this layer I defined a config map for the prometheus and grafana configurations.
-That the configuration is a translation of docker-compose monitor definition to kubernetes.
+For this layer I defined a config map for the Prometheus and Grafana configurations.
+The configuration is a translation of docker-compose monitor definition to kubernetes.
 Here the magic work is made by the Prometheus configuration that stay synchronized with the cluster state.
 {% highlight yaml %}
 #complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/kubernetes/monitoring.yaml
@@ -861,7 +861,7 @@ kubectl apply -f application-frontend.yaml
 kubectl apply -f monitoring.yaml
 {% endhighlight %}
 
-Remember that we added readiness probe so the application layer will be considered ready when the database startap will be complited.
+Remember that we added readiness probe so the application layer will be considered ready when the database startup will be completed.
 
 To inspect what we created run the following command:
 {% highlight bash %}
@@ -900,16 +900,16 @@ NAME                         TYPE                                  DATA   AGE
 secret/mysql-secret          Opaque                                3      3m18s
 {% endhighlight %}
 
-Notice that we can see all the kubernetes object of the architecture.
+Notice that we can see all the Kubernetes object of the architecture.
 
-If you want to navigate the aplication using the frontend:
+If you want to navigate the application using the frontend:
 {% highlight bash %}
 kubectl port-forward service/starevent-frontend 8080
 {% endhighlight %}
 and open a page from the browser [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
 
-Let's show the prometheus UI, forwaring its service:
+Let's show the Prometheus UI, forwarding its service:
 {% highlight bash %}
 kubectl port-forward service/prometheus 9090
 {% endhighlight %}
@@ -917,34 +917,34 @@ and open a page from the browser [http://127.0.0.1:9090](http://127.0.0.1:9090)
 
 ![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/prometheus-kubernetes-1.png)
 
-We can notice that there are two targets one for event service and another for reservation service. Is also possible to notice the labels that we exported from kubernetes pod. Thanks to our configuration, Promethus is able to follow the kubernetes status and update the pods that are running our services.
+We can notice that there are two targets one for event service and another for reservation service. It is also possible to notice the labels that we exported from Kubernetes pod. Thanks to our configuration, Prometheus is able to follow the Kubernetes status and update the pods that are running our services.
 
-What happen if a scale event appen? Let's simulate a scale up event:
+What happens in case of a scale event? Let's simulate a scale up event:
 {% highlight bash %}
 kubectl scale deployment/starevent-event --replicas=5
 {% endhighlight %}
 
-If we update the promethus target page:
+If we update the Promethus target page:
 
 ![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/prometheus-kubernetes-2.png)
 
 Notice that the targets are 6, 5 for event services and 1 for the reservation service.
 
 
-If are now interested on the application metrics whe need to connect to the grafana service:
+If are now interested on the application metrics we need to connect to the Grafana service:
 {% highlight bash %}
 kubectl port-forward service/grafana 3000
 {% endhighlight %}
 and open a page from the browser [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
-To see some data in graphics, I decided to create a simple jmeter load test to invoke randomically services to inject traffic in the system.
+To see some data in graphics, I decided to create a simple jmeter load test to inject traffic into the system.
 You can find the source of jmeter file here: [JMeter load test](https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/loadtest/loadtest.jmx)
 
 ![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/grafana-kubernetes-1.png)
 
 
 ## Clean up
-When we finish to play with the arhitecture, we can clean everything and release the created resources:
+When we finish to play with the architecture, we can clean everything and release the created resources:
 {% highlight yaml %}
 kubectl delete -f monitoring.yaml
 kubectl delete -f application-frontend.yaml
@@ -955,7 +955,7 @@ kubectl delete -f database-config.yaml
 {% endhighlight %}
 
 # Conclusion
-This article extended the "startevent" application proposed in the previous article by adding access to the database and monitoring. The final purpose was to show the potential offered by quarkus with the aim of releasing the application in kubernetes. In conclusion, also from this experience it emerges that Quarkus provides excellent support to the needs of the cloud and thanks to its extensions it allows to solve the problems of database access and monitoring with extreme ease.
+This article extended the "startevent" application proposed in the previous article by adding access to the database and monitoring. The final purpose was to show the potential offered by quarkus with the aim of releasing the application in Kubernetes. In conclusion, also from this experience it emerges that Quarkus provides excellent support to the needs of the cloud and thanks to its extensions it allows to solve the problems of database access and monitoring with extreme ease.
 What emerges is that Quarkus is the result of the expertise, ideas and experience of the community that maintains and develops it. By leveraging the open source ecosystem, you can create applications that integrate easily with other systems and help release value. 
 
 # Resources
