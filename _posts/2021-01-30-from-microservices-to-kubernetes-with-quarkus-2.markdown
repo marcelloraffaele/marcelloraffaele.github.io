@@ -350,7 +350,7 @@ If you are interested on a prepared dashboard, see it from this link [grafana-da
 
 
 # Integration with the Database
-First we need to consider that every microservice should have an own database to avoid dependency. For this reason I will create only one instance of MySQL engine and two different database inside:
+First we need to consider that every microservice should have an own database to avoid dependency from other microservices. For this reason I will create only one instance of MySQL engine and two different database inside:
 - **eventdb**: the database for the Event Microservice
 - **reservationdb**: the database for the Reservation Microservice
 
@@ -554,21 +554,19 @@ Starting from the database layer, I used docker to initialize and run a database
 
 Docker gave me the opportunity to create/test/destroy the environment any time I wanted. Containers need few resources and I could have everything running locally on my computer.
 
-To work with containers is essential to read the documentation on [Docker Hub](https://hub.docker.com).
-
-For example at the [mysql docker official image](https://hub.docker.com/_/mysql) I understood how to configure a MySQL container, how to run a command line client, how to set up environment variables and initialize the database with custom sql scripts.
+To work with containers is essential to read the documentation on [Docker Hub](https://hub.docker.com). For example at the [mysql docker official image](https://hub.docker.com/_/mysql) I understood how to configure a MySQL container, how to run a command line client, how to set up environment variables and initialize the database with custom sql scripts.
 
 
-If you make change to the source code remember to build the application images using the command:
+Before to start, remember that if you make changes to the source code, is needed to build the application images using the command:
 {% highlight shell %}
 mvn package -Dquarkus.container-image.build=true
 {% endhighlight %}
-And to push images to the remote repository.
+And to push images to (your) remote repository.
 
 Otherwise, you can use the images that I pushed as public on [hub.docker.com](https://hub.docker.com).
 
 
-At the end of this iterative process I created a docker compose descriptor that create a minimal set of containers that implement the architecture:
+When the docker images are ready it's possibile to use the docker compose descriptor that I prepared to run a minimal set of containers to implement the architecture:
 
 {% highlight yaml %}
 #complete source code at https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/docker/docker-compose.yaml
@@ -682,7 +680,7 @@ Using Kubernetes objects the architecture becomes something like this:
 
 ![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/kubernetes-architecture.png)
 
-Now the architecture is a bit more complex. Every service is run using deployment. In front of each deployment there's a service that works like a load balancer. Wherever there's need to store sensible information ( passwords ) I use secrets whereas use config maps for configurations.
+Now the architecture is a bit more complex than the original. Every service is run using deployment. In front of each deployment there's a service that works like a load balancer. Wherever there's need to store sensible information ( passwords ) I use secrets whereas use config maps for configurations.
 
 ## Persistence Layer
 During the last paragraph was presented a basic setup that can be very useful during development. The solution can be improved. It is possible to create a deployment to deploy a single replica for mysql database. The configuration of the database singleton pod is made using **secrets** to manage the database passwords and **config map** to keep the database initialization scripts. The following descriptor shows the database-config.yaml file:
