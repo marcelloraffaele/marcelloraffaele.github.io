@@ -7,10 +7,10 @@ img: google-cloud-storage-camel/google-cloud-storage-camel.png
 fig-caption: google-cloud-storage-camel/google-cloud-storage-camel.png
 tags: [google, cloud, storage, camel, integration, java]
 ---
-The rising adoption of Cloud services need also to integrate this features with new and existing application.
+The rising adoption of Cloud services need also to integrate this features with new and existing applications.
 Apache Camel is an Open Source integration framework that empowers developers to quickly and easily integrate various systems consuming or producing data. It is widely used because is a small library that has minimal dependencies for easy embedding in java application. For more information about Camel and it's documentation visit [camel.apache.org](https://camel.apache.org).
 
-I am Camel fan, I have used it in many projects, and now I decided to start to contribute on it on github. As start, I decided to help to write new missing components and my first official contribution is the development of the Google Cloud Storage component. After some work, tests and pull requests I am proud to announce that from the [version 3.9.0](https://camel.apache.org/blog/2021/03/Camel39-Whatsnew/) Camel comes with the Google Cloud Storage component. It can be used to quickly integrate your java applications with Google Cloud Storage buckets.
+I am a Camel fan, I have used it in many projects, and now I decided to start to contribute on it on github. As start, I decided to help to write new missing components and my first official contribution is the development of the Google Cloud Storage component. After some work, tests and pull requests I am proud to announce that from the [version 3.9.0](https://camel.apache.org/blog/2021/03/Camel39-Whatsnew/) Camel comes with the Google Cloud Storage component. It can be used to quickly integrate your java applications with Google Cloud Storage buckets.
 Let's see how to use it practically.
 
 # The Google Cloud Storage Component
@@ -222,7 +222,7 @@ Notice that the source bucket is empty, the consumed bucket contains the origina
 
 # Conclusion
 This article wants to quickly explain how to use the camel google storage component for a simple use case but also to demonstrate the power of opensource software and contribution.
-I am proud to have made my contribution to the Camel project. By developing this component I was able to solve my need (to integrate my applications with Google Cloud Storage) but also to share my work with the community that will be able to reuse the component and maybe, why not, even improve it. I also had the opportunity to study more closely the structure of the project, the best practices and standards they adopt and collaborate with the people involved in developing the project. I think that is not possible to study these things from books but it's only possible though experience. For this reason I highly recommend collaborating in opensource projects.
+I am proud to have made my contribution to the Camel project. By developing this component I was able to solve my need (to integrate my applications with Google Cloud Storage) but also to share my work with the community that will be able to reuse the component and maybe, why not, even improve it. I also had the opportunity to study more closely the structure of the project, the best practices and standards they adopt and collaborate with the people involved in developing the project. I think that is not possible to study these things from books but it's only possible through experience. For this reason I highly recommend collaborating in opensource projects.
 
 # Resources
 If you want to learn more:
