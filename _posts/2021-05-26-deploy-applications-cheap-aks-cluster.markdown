@@ -7,7 +7,7 @@ img: cheap-aks-cluster/image.png
 fig-caption: cheap-aks-cluster/image.png
 tags: [Azure, Cloud, AKS, Kubernetes]
 ---
-Few months ago I started to write technical articles about Kubernetes and Java development. The feedback that I had was really positive, and I decided to complete the argument talking about how to create a Kubernetes cluster to deploy our applications.
+Few months ago I started to write technical articles about Kubernetes and Java development. The feedback that I had was really positive, and I decided to complete the argument talking about how to create a Kubernetes cluster to deploy our applications in the Cloud.
 This article aims to complement the study addressed in the previous two articles ( [From Microservices to Kubernetes with Quarkus (1/2)](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-1/) and [From Microservices to Kubernetes with Quarkus (2/2) - Monitoring](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-2/) in which I have demonstrated how to develop a java application, build the docker image and deploy it on a local Kubernetes instance. The missing step was to deploy these applications in the Cloud.
 We will see how it is possible to define a minimal and inexpensive configuration of Azure Kubernetes Service (AKS) to deploy our applications for testing and demo purposes.
 
@@ -18,7 +18,7 @@ Using AKS, we pay only the virtual machines, and associated storage and networki
 
 ## How much it costs?
 The Cloud is a very powerful tool but it can be also a complex thing to manage. If it isn't well managed it can become very expensive.
-The aims of this article is to show a simple and cheap AKS configuration for testing and demo purposes. Production environment needs different characteristics like high availability, autoscaling, high performance, low latency... This configuration can be a good point of start for our test and can be scaled and improved to meet production requirements.
+The aims of this article is to show a simple and cheap AKS configuration for testing and demo purposes. Production environment needs different characteristics like high availability, autoscaling, high performance and low latency. This configuration can be a good point of start for our test and can be scaled and improved to meet production requirements.
 
 As anticipated, using AKS we will be billed for only the virtual machines, and associated storage and networking resources consumed.
 For this reason the main price will come from the node costs.
