@@ -1,11 +1,12 @@
 ---
 layout: post
 title: From Microservices to Kubernetes with Quarkus (1/2)
+author: rmarcello
 date: 2021-01-03 00:00:00 +0000
 description: A microservices event booking application developed using Quarkus
-img: starevent-quarkus/starevent-quarkus.png
-fig-caption: starevent-quarkus/starevent-quarkus.png
-tags: [quarkus, quarkusio, microservices, docker, kubernetes, java]
+image: assets/images/starevent-quarkus/starevent-quarkus.png
+categories: [quarkus, quarkusio, microservices, docker, kubernetes, java]
+comments: false
 ---
 
 After some days spent reading books about Microservices and Cloud Native I found in Quarkus an impressive stack to build Cloud Native Applications. 
@@ -25,11 +26,11 @@ We can identify two types of users:
 - Admin: manages the available events
 - Customer: consult the events and buy tickets.
 
-![starevent-usecase-diagram]({{site.baseurl}}/assets/img/starevent-quarkus/starevent-usecase-diagram.png)
+![starevent-usecase-diagram]({{site.baseurl}}/assets/images/starevent-quarkus/starevent-usecase-diagram.png)
 
 The application could be composed of two microservices that act as backend and deal respectively with the management of events and reservations. Furthermore, to complete the example, we can also provide a frontend to use the entire application.
 
-![starevent-package-diagram]({{site.baseurl}}/assets/img/starevent-quarkus/starevent-package-diagram.png)
+![starevent-package-diagram]({{site.baseurl}}/assets/images/starevent-quarkus/starevent-package-diagram.png)
 
 The above diagram shows the component names and expected interactions.
 - **"starevent-event"** provides services for event management (Create, Read, Update, and Delete)
@@ -504,7 +505,7 @@ public class IndexResource {
 
 If we open a browser and visit **http://127.0.0.1:8080** we will see the frontend application, we can view all the availabe events, discover details and reserve a ticket:
 
-![starevent-frontend-1]({{site.baseurl}}/assets/img/starevent-quarkus/starevent-frontend-1.png)
+![starevent-frontend-1]({{site.baseurl}}/assets/images/starevent-quarkus/starevent-frontend-1.png)
 
 
 Now that the development is completed we can think on how to run the entire application in an environment ready for production.
@@ -597,7 +598,7 @@ docker-compose -f docker-compose.yaml up -d
 
 After few seconds the images are up, infact my docker says that is all up and running:
 
-![starevent-frontend-2]({{site.baseurl}}/assets/img/starevent-quarkus/starevent-frontend-2.png)
+![starevent-frontend-2]({{site.baseurl}}/assets/images/starevent-quarkus/starevent-frontend-2.png)
 
 We can do our test and when we finish we stop everything, we can stop everything
 {% highlight shell %}
@@ -611,7 +612,7 @@ clean package -Dquarkus.container-image.push=true
 
 I already did it:
 
-![starevent-docker-hub]({{site.baseurl}}/assets/img/starevent-quarkus/starevent-docker-hub.png)
+![starevent-docker-hub]({{site.baseurl}}/assets/images/starevent-quarkus/starevent-docker-hub.png)
 
 This means that you can launch directly the docker compose file inside a configured docker environment to test the application.
 If you don't have a Docker installed I suggest you to try <a href="https://labs.play-with-docker.com">PLAY WITH DOCKER</a>, copy the docker compose and try it.

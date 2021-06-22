@@ -1,34 +1,63 @@
-title: Raffaele Marcello personal github web site
-description: This is the personal github web site of Raffaele Marcello  
-permalink: ':title/'
-baseurl: "" # the subpath of your site, e.g. /blog, empy for base url
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-site-twitter: #if your site has a twitter account, enter it here
+# Site
+name: "Raffaele Marcello"
+title: "Raffaele Marcello"
+description: "My personal Blog, with articles about Cloud services, Kubernetes and Java"
+logo: 'assets/images/logo.png'
+favicon: 'assets/images/logo.png'
+baseurl: ''
+google_analytics: 'UA-45995597-1'
+# disqus: 'demowebsite'
+# mailchimp-list: 'https://wowthemes.us11.list-manage.com/subscribe/post?u=8aeb20a530e124561927d3bd8&amp;id=8c3d2d214b'
+include: ["_pages"]
+permalink: /:title/
 
-# Author Settings
-author: Raffaele Marcello # add your name
-author-img: rmarcello.png # add your photo
-about-author: AWS Certified Solutions Architect ... and this is my personal Blog. Here you can find some articles about my experiences and my ideas about some IT topics. I hope you can find it interesting!
-social-twitter: rmarcello
-#social-facebook: # add your Facebook handle
-social-github: marcelloraffaele
-social-linkedin: raffaele-marcello-4b684514
-social-email: dev.rmarcello@gmail.com
+# Authors
+authors:
+  rmarcello:
+    name: Raffaele Marcello
+    display_name: rmarcello
+    avatar: 'assets/images/avatar.png'
+    email: marcelloraffaele@gmail.com
+    web: https://marcelloraffaele.github.io/
+    twitter: https://twitter.com/rmarcello
+    description: "AWS Certified Solutions Architect with extensive experience in management, design, development of IT solutions."
 
-# Disqus
-discus-identifier: marcelloraffaele.github.io # add your discus identifier
-
-# Tracker
-analytics: UA-45995597-1 # Google Analytics
-
-# Build Settings
-markdown: kramdown
+# Plugins
 plugins:
-  - jekyll-sitemap
   - jekyll-paginate
-  - jemoji
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-archives
+    
+# Archives
+jekyll-archives:
+  enabled:
+    - categories
+  layout: archive
+  permalinks:
+    category: '/category/:name/'
+    
+# Pagination 
+paginate: 9
+paginate_path: /page:num/
+    
+# Other
+markdown: kramdown
 
-paginate: 8
-paginate_path: "/page/:num"
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
 
-exclude: ["node_modules", "gulpfile.js", "package.json", "yarn.lock"]
+# Adsense (change to "enabled" to activate, also your client id and ad slot. Create a new ad unit from your Adsense account to get the slot.)
+adsense: "disabled"
+adsense-data-ad-client: "ca-pub-3412143450191416"
+adsense-data-ad-slot: "1363087678"
+
+# Lazy Images ("enabled" or "disabled")
+lazyimages: "disabled"
+
+exclude: [changelog.md, LICENSE.txt, README.md, Gemfile, Gemfile.lock]

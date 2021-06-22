@@ -1,11 +1,11 @@
 ---
 layout: post
 title: Run an Oracle Database on Docker in 5 minutes [ENG]
+author: rmarcello
 date: 2020-04-30 20:00:00 +0000
-description: How to run an Oracle Database on Docker in 5 minutes, english version
-img: docker-oracledb/container_oracle.png # Add image post (optional)
-fig-caption: docker-oracledb/docker_oracle.png # Add figcaption (optional)
-tags: [docker, oracle, database, 5min]
+image: assets/images/docker-oracledb/container_oracle.png # Add image post (optional)
+categories: [docker, oracle, database, 5min]
+comments: false
 ---
 
 I really wanted to write a short article on how to install a complete Oracle Enterprise Database on your local machine. After some research I have found that the easiest and cleanest way is to use Docker. Using Docker we can take advantage of the many "images" on the Docker hub to experiment, test or play with many products in their original versions or if we want in the modified and extended versions by other developers.
@@ -23,7 +23,7 @@ You should see the hello world image download and then the output related to the
 
 Next you will need to create a DockerHub account from <a href="https://hub.docker.com/">hub.docker.com</a>. At this point, you can search the desired image with the name "Oracle Database Enterprise Edition":
 
-![docker-hub-oracledb]({{site.baseurl}}/assets/img/docker-oracledb/docker_hub.png)
+![docker-hub-oracledb]({{site.baseurl}}/assets/images/docker-oracledb/docker_hub.png)
 
 As we can see, the image is created and managed directly by Oracle and Docker certifies it. We can also note that the image is based on Oracle Database Server 12.2.0.1 Enterprise Edition which will run on Oracle Linux 7. Another thing we can note is that it will be necessary to "checkout" the image and accept the defined terms from Oracle. Once this is done, we can take action.
 
@@ -88,7 +88,7 @@ GRANT UNLIMITED TABLESPACE TO myuser;
 {% endhighlight %}
 
 From this moment we can access the database through any client, for example Oracle SQL Developer:
-![OracleSQLDeveloper]({{site.baseurl}}/assets/img/docker-oracledb/OracleSQLDeveloper.PNG)
+![OracleSQLDeveloper]({{site.baseurl}}/assets/images/docker-oracledb/OracleSQLDeveloper.PNG)
 
 
 #### Stop and clean the container

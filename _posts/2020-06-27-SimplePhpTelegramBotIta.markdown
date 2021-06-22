@@ -1,11 +1,12 @@
 ---
 layout: post
 title: Creare un semplice Bot Telegram in PHP [ITA]
+author: rmarcello
 date: 2020-06-27 00:00:00 +0000
 description: Come creare un semplice bot Telegram in PHP, versione italiana
-img: telegram-bot-php/telegram-bot-php.png # Add image post (optional)
-fig-caption: telegram-bot-php/telegram-bot-php.png # Add figcaption (optional)
-tags: [telegram, php, bot, 5min]
+image: assets/images/telegram-bot-php/telegram-bot-php.png # Add image post (optional)
+categories: [telegram, php, bot, 5min]
+comments: false
 ---
 
 Spesso realizzare un Bot può sembrare un impresa difficile e costosa.
@@ -24,7 +25,7 @@ Telegram permette di interagire con le proprie API in due modalità:
 </ul>
 In questo articolo utilizzeremo la modalità <b>"webhook"</b>, andremo a definire una pagina php che servirà le richieste provenienti da Telegram. Nell'immagine che segue vediamo il tipico scenario che segue l'invio di un messaggio da parte dell'utente che da smartphone scrive qualcosa al bot. L'app di telegram comunica ai propri server che un determinato utente ha inviato un messaggio a sua volta inoltra la richiesta al nostro servizio che dovrà gestire l'evento. A questo punto il servizio php elabora la risposta le la inoltra al server Telegram che la inoltra all'applicazione dello smartphone.
 
-![telegram-php-diagram]({{site.baseurl}}/assets/img/telegram-bot-php/telegram-php-diagram.png)
+![telegram-php-diagram]({{site.baseurl}}/assets/images/telegram-bot-php/telegram-php-diagram.png)
 
 Passiamo alla pratica e creiamo il nostro bot.
 
@@ -43,7 +44,7 @@ Accediamo a Telegram da smartphone o da web (<a href="https://web.telegram.org/"
 A questo punto, BotFather genera un token che ci sarà utile più avanti per utilizzare le API.
 <b>NOTA: custodite il token al sicuro perchè permette a chiunque di controllare il vostro BOT</b>.
 
-![telegram-bot-botfather]({{site.baseurl}}/assets/img/telegram-bot-php/telegram-bot-botfather.png)
+![telegram-bot-botfather]({{site.baseurl}}/assets/images/telegram-bot-php/telegram-bot-botfather.png)
 
 A questo punto abbiamo un token e possiamo definire il servizio PHP.
 
@@ -147,7 +148,7 @@ allora possiamo provare il nostro bot, accediamo a <a href="t.me/Botzellette_bot
  
 ### Test
 Per testare il nostro bot, basta aprire una finestra di chat e inviare messaggi:
-![telegram-bot-botBotzelle]({{site.baseurl}}/assets/img/telegram-bot-php/telegram-bot-Botzelle.png)
+![telegram-bot-botBotzelle]({{site.baseurl}}/assets/images/telegram-bot-php/telegram-bot-Botzelle.png)
 
 Oppure guarda questo:
 <iframe width="560" height="315" src="https://www.youtube.com/embed/m5EgaGtsIzo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

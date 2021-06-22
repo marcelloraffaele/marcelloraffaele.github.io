@@ -1,11 +1,11 @@
 ---
 layout: post
 title: From Microservices to Kubernetes with Quarkus (2/2) - Monitoring
+author: rmarcello
 date: 2021-01-30 00:00:00 +0000
-description: A microservices event booking application developed using Quarkus
-img: starevent-quarkus-2/starevent-quarkus.png
-fig-caption: starevent-quarkus-2/starevent-quarkus.png
-tags: [quarkus, quarkusio, microservices, docker, kubernetes, java, prometheus, grafana, mysql]
+image: assets/images/starevent-quarkus-2/starevent-quarkus.png
+categories: [quarkus, quarkusio, microservices, docker, kubernetes, java, prometheus, grafana, mysql]
+comments: false
 ---
 
 During the [previous article](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-1/) I talked about how was quick and simple to make a small microservices architecture using Quarkus as Cloud Native Stack. I presented an example application and built it from scratch to deploy on Kubernetes. It was a very positive experience because Quarkus give to the developer a set of extensions and plugins that give the opportunity to use the fresher technology in a very productively way making easy the developer's life.
@@ -26,7 +26,7 @@ The application is a simplified version of an event booking system. Our customer
 
 The desired architecture is the following:
 
-![starevent-usecase-diagram]({{site.baseurl}}/assets/img/starevent-quarkus-2/starevent-architecture.png)
+![starevent-usecase-diagram]({{site.baseurl}}/assets/images/starevent-quarkus-2/starevent-architecture.png)
 
 Notice that is needed also two databases one for event and another for reservation.
 
@@ -654,18 +654,18 @@ Creating starevent-grafana     ... done
 
 You can see the frontend visiting [http://127.0.0.1:8080](http://127.0.0.1:8080):
 
-![frontend]({{site.baseurl}}/assets/img/starevent-quarkus-2/frontend-docker-1.png)
+![frontend]({{site.baseurl}}/assets/images/starevent-quarkus-2/frontend-docker-1.png)
 
 
 You can see the Prometheus page visiting [http://127.0.0.1:9090](http://127.0.0.1:9090):
 
-![prometheus]({{site.baseurl}}/assets/img/starevent-quarkus-2/prometheus-docker-1.png)
+![prometheus]({{site.baseurl}}/assets/images/starevent-quarkus-2/prometheus-docker-1.png)
 
 Notice as targets of the developed services.
 
 You can see the Grafana page visiting [http://127.0.0.1:3000](http://127.0.0.1:3000) and set default user and password (admin/admin):
 
-![grafana]({{site.baseurl}}/assets/img/starevent-quarkus-2/grafana-docker-1.png)
+![grafana]({{site.baseurl}}/assets/images/starevent-quarkus-2/grafana-docker-1.png)
 
 
 When we have finished our tests, we can clean up:
@@ -678,7 +678,7 @@ To complete this article I need to show you how to bring everything on Kubernete
 
 Using Kubernetes objects the architecture becomes something like this:
 
-![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/kubernetes-architecture.png)
+![kubernetes-architecture]({{site.baseurl}}/assets/images/starevent-quarkus-2/kubernetes-architecture.png)
 
 Now the architecture is a bit more complex than the original. Every service is run using deployment. In front of each deployment there's a service that works like a load balancer. Wherever there's need to store sensible information ( passwords ) I use secrets whereas use config maps for configurations.
 
@@ -913,7 +913,7 @@ kubectl port-forward service/prometheus 9090
 {% endhighlight %}
 and open a page from the browser [http://127.0.0.1:9090](http://127.0.0.1:9090)
 
-![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/prometheus-kubernetes-1.png)
+![kubernetes-architecture]({{site.baseurl}}/assets/images/starevent-quarkus-2/prometheus-kubernetes-1.png)
 
 We can notice that there are two targets one for event service and another for reservation service. It is also possible to notice the labels that we exported from Kubernetes pod. Thanks to our configuration, Prometheus is able to follow the Kubernetes status and update the pods that are running our services.
 
@@ -924,7 +924,7 @@ kubectl scale deployment/starevent-event --replicas=5
 
 If we update the Promethus target page:
 
-![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/prometheus-kubernetes-2.png)
+![kubernetes-architecture]({{site.baseurl}}/assets/images/starevent-quarkus-2/prometheus-kubernetes-2.png)
 
 Notice that the targets are 6, 5 for event services and 1 for the reservation service.
 
@@ -938,7 +938,7 @@ and open a page from the browser [http://127.0.0.1:3000](http://127.0.0.1:3000)
 To see some data in graphics, I decided to create a simple jmeter load test to inject traffic into the system.
 You can find the source of jmeter file here: [JMeter load test](https://github.com/marcelloraffaele/starevent-quarkus/blob/b1.1-monitoring/loadtest/loadtest.jmx)
 
-![kubernetes-architecture]({{site.baseurl}}/assets/img/starevent-quarkus-2/grafana-kubernetes-1.png)
+![kubernetes-architecture]({{site.baseurl}}/assets/images/starevent-quarkus-2/grafana-kubernetes-1.png)
 
 
 ## Clean up

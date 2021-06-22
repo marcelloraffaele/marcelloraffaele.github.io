@@ -1,11 +1,12 @@
 ---
 layout: post
 title: Deploy applications in a cheap AKS cluster
+author: rmarcello
 date: 2021-05-26 00:00:00 +0000
-description: Deploy applications in a cheap AKS cluster
-img: cheap-aks-cluster/image.png
-fig-caption: cheap-aks-cluster/image.png
-tags: [Azure, Cloud, AKS, Kubernetes]
+image: assets/images/cheap-aks-cluster/image.png
+categories: [Azure, Cloud, AKS, Kubernetes]
+comments: false
+featured: true
 ---
 Few months ago I started to write technical articles about Kubernetes and Java development. The feedback that I had was really positive, and I decided to complete the argument talking about how to create a Kubernetes cluster to deploy our applications in the Cloud.
 This article aims to complement the study addressed in the previous two articles ( [From Microservices to Kubernetes with Quarkus (1/2)](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-1/) and [From Microservices to Kubernetes with Quarkus (2/2) - Monitoring](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-2/) in which I have demonstrated how to develop a java application, build the docker image and deploy it on a local Kubernetes instance. The missing step was to deploy these applications in the Cloud.
@@ -27,9 +28,14 @@ In addition, only 1 node can be enough because we don't need high availability.
 A bit more complicated is the "vm size", it's important to choose a supported size that give us also the opportunity to use the Kubernetes cluster without problems.
 We need an economical virtual machine that provide a low-cost option for workloads that run at a low to moderate baseline CPU performance. For this reason I suggest choosing the "B2S" instance that has the following characteristics:
 
-|Instance|vCPU|RAM|Temporary storage|Pay as you go|
-|---|---|---|---|---|
-|B2S|2|4 GiB|8 GiB|$0.048/hour (price for West Europe region)|
+<table border="1">
+	<tr>
+		<td>Instance</td><td>vCPU</td><td>RAM</td><td>Temporary storage</td><td>Pay as you go</td>
+	</tr>
+	<tr>
+		<td>B2S</td><td>2</td><td>4 GiB</td><td>8 GiB</td><td>$0.048/hour (price for West Europe region)</td>
+	</tr>
+</table>
 
 Only for this single node, we will pay 1,152 $/day.
 This means that if we are quick to make our test and destroy the resources when finished, we can test our application in a real Kubernetes cluster reachable from internet keeping our budget limited.
@@ -55,19 +61,19 @@ Using architecture-as-code give me the opportunity to share with you the code th
 
 Notice that these scripts are optimized for Unix system, by default Azure Cloud Shell start in a Unix system:
 
-![starevent ]({{site.baseurl}}/assets/img/cheap-aks-cluster/az1.png)
+![starevent ]({{site.baseurl}}/assets/images/cheap-aks-cluster/az1.png)
 
 First we define the following env vars:
-{% highlight shell %}
+```shell
 RESOURCE_GROUP=my-aks-test-rg
 CLUSTER_NAME=my-cluster-aks
 LOCATION=westeurope
-{% endhighlight %}
+```
 
 You can change the location using one closer to you.
 After it, we can create the cluster:
 
-{% highlight shell %}
+```shell
 az group create --location $LOCATION --name $RESOURCE_GROUP
 az aks create \
     --resource-group $RESOURCE_GROUP \
@@ -76,7 +82,7 @@ az aks create \
     --node-count 1 \
     --node-vm-size "Standard_B2s" \
     --generate-ssh-keys
-{% endhighlight %}
+```
 
 Notice that we specify:
 - `--node-count 1` that means that only one node is created ( no good for high availability but good for cheap works like test and demo).
@@ -86,16 +92,16 @@ After few minutes (3-5 minutes), the cluster is created and we can configure our
 If you are using Azure Shell, kubectl is already installed otherwise if you're using your own environment you need to download kubectl and install it.
 
 The cluster is new and kubectl doesn't know how to reach it. For this reason we need to configure it:
-{% highlight shell %}
+```shell
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
-{% endhighlight %}
+```
 
 Now that kubectl has the credentials for this new cluster, we send commands to it:
-{% highlight shell %}
+```shell
 > kubectl get node
 NAME                                STATUS   ROLES   AGE     VERSION
 aks-nodepool1-73989958-vmss000000   Ready    agent   4m51s   v1.19.9
-{% endhighlight %}
+```
 
 # Deploy the application
 The application that I will show is the same used in my article: [From Microservices to Kubernetes with Quarkus](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-1/).
@@ -103,13 +109,13 @@ The application that I will show is the same used in my article: [From Microserv
 Notice that it isn't important which application you install, you can change this step and deploy your own application.
 
 Here I prepared the **application.yaml** file that specify the application and configure the Kubernetes objects.
-{% highlight shell %}
+```shell
 wget https://raw.githubusercontent.com/marcelloraffaele/azure-experiments/main/simple-cheap-aks-cluster/application.yaml
 kubectl apply -f application.yaml
-{% endhighlight %}
+```
 
 The application will be quickly installed and you can check the objects:
-{% highlight shell %}
+```shell
 > kubectl get pod
 NAME                                     READY   STATUS    RESTARTS   AGE
 starevent-event-6d8dd764b9-lnnkx         1/1     Running   0          44s
@@ -128,39 +134,39 @@ kubernetes              ClusterIP      10.0.0.1      <none>          443/TCP    
 starevent-event         ClusterIP      10.0.14.57    <none>          8081/TCP       94s
 starevent-frontend      LoadBalancer   10.0.61.251   20.76.129.184   80:30071/TCP   94s
 starevent-reservation   ClusterIP      10.0.34.148   <none>          8082/TCP       94s
-{% endhighlight %}
+```
 
 Notice that as service, there is also a LoadBalancer that specify an `EXTERNAL-IP` that can be used to visualize the application frontend.
 This is something that is not possible to show using a local Kubernetes cluster. Using a Azure AKS, the kubernetes engine can configure the service and expose the web application to the world in few minutes.
 This is a powerful feature but is also the reason because we must be careful to expose data and port to the internet( not only in production environment ) every time we deploy something in the Cloud.
 
-![starevent ]({{site.baseurl}}/assets/img/cheap-aks-cluster/starevent.png)
+![starevent ]({{site.baseurl}}/assets/images/cheap-aks-cluster/starevent.png)
 
 ## Undeploy the application
 When we finish our test we can delete the application and all the object it has created.
-{% highlight shell %}
+```shell
 kubectl delete -f application.yaml
-{% endhighlight %}
+```
 
 Notice that deleting the application doesn't stop the cluster that is still running ( you're still billed for it ).
 
 # Delete the cluster
 There are two ways to delete the cluster, one is to send a `az aks delete` command; another is to simply delete the entire resource group using the following command:
-{% highlight shell %}
+```shell
 az group delete --resource-group $RESOURCE_GROUP --yes --no-wait
-{% endhighlight %}
+```
 This will delete the resource group and you will not be billed any more for this cluster.
 
 Notice that your kubectl is still configured with the credentials of this cluster, to clear it:
-{% highlight shell %}
+```shell
 kubectl config delete-context $CLUSTER_NAME
 kubectl config delete-cluster $CLUSTER_NAME
-{% endhighlight %}
+```
 
 # Cost analysis
 Using this configuration and keeping running the cluster for 2 hours, I spent $0,17 (~0,15€):
 
-![starevent ]({{site.baseurl}}/assets/img/cheap-aks-cluster/az2.png)
+![starevent ]({{site.baseurl}}/assets/images/cheap-aks-cluster/az2.png)
 
 Notice that the image shows also the costs of each service. Even if the experiment was short and not expensive, we can see that the total cost doesn't depend only on Virtual Machines but also on Storage and Network.
 

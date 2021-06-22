@@ -1,11 +1,11 @@
 ---
 layout: post
 title: Creare un Database Oracle in 5 minuti con Docker [ITA]
+author: rmarcello
 date: 2020-04-17 17:00:00 +0000
-description: Creare un Database Oracle in 5 minuti con Docker, versione in italiano
-img: docker-oracledb/container_oracle.png # Add image post (optional)
-fig-caption: docker-oracledb/docker_oracle.png # Add figcaption (optional)
-tags: [docker, oracle, database, 5min]
+image: assets/images/docker-oracledb/container_oracle.png # Add image post (optional)
+categories: [docker, oracle, database, 5min]
+comments: false
 ---
 
 Da qualche giorno ormai volevo scrivere un breve articolo su come installare sulla propria macchina un Database Oracle Enterprise completo.
@@ -28,7 +28,7 @@ Dovreste vedere scaricare l'immagine di hello world e successivamente l'output r
 Successivamente sarà necessario creare un account per il DockerHub dal sito <a href="https://hub.docker.com/">hub.docker.com</a> effettua la registrazione.
 A questo punto, sarà possibile cercare l'immagine desiderata con il nome "Oracle Database Enterprise Edition":
 
-![docker-hub-oracledb]({{site.baseurl}}/assets/img/docker-oracledb/docker_hub.png)
+![docker-hub-oracledb]({{site.baseurl}}/assets/images/docker-oracledb/docker_hub.png)
 Come possiamo notare, l'immagine è creata e gestita direttamente da Oracle è Docker lo certifica. Possiamo notare anche che l'immagine è basata su Oracle Database Server 12.2.0.1 Enterprise Edition che verrà eseguito su Oracle Linux 7. Un' altra cosa che possiamo notare è che sarà necessario effettuare il "checkout" dell'immagine e accettare i termini definiti da Oracle. Effettuato ciò, possiamo passare all'azione.
 
 
@@ -93,7 +93,7 @@ GRANT UNLIMITED TABLESPACE TO myuser;
 
 Da questo momento in poi possiamo accedere al database mediante un qualsiasi client, per esempio Oracle SQL Developer:
 
-![OracleSQLDeveloper]({{site.baseurl}}/assets/img/docker-oracledb/OracleSQLDeveloper.PNG)
+![OracleSQLDeveloper]({{site.baseurl}}/assets/images/docker-oracledb/OracleSQLDeveloper.PNG)
 
 
 #### Stop e pulizia del container

@@ -1,20 +1,12 @@
+This website is based on Mediumish - Jekyll Theme
 
-command:
+[Live Demo](https://wowthemesnet.github.io/mediumish-theme-jekyll/) &nbsp; | &nbsp; [Download](https://github.com/wowthemesnet/mediumish-theme-jekyll/archive/master.zip) &nbsp; | &nbsp; [Documentation](https://bootstrapstarter.com/template-mediumish-bootstrap-jekyll/) &nbsp; | &nbsp; [Buy me a coffee](https://www.wowthemes.net/donate/)
 
-to run locally
-```
-bundle exec jekyll serve
-```
-
-to clean everything
-```
-bundle exec jekyll clean 
-```
-
-I extended the theme from: https://artemsheludko.github.io/flexible-jekyll/
+![mediumish](assets/images/mediumish-jekyll-template.png)
 
 
-useful resources:
+### Copyright
 
-https://jekyllrb.com/docs/posts/
-https://www.markdownguide.org/basic-syntax/#paragraphs-1
+Copyright (C) 2019 Sal, https://www.wowthemes.net
+
+**Mediumish for Jekyll** is designed and developed by [Sal](https://www.wowthemes.net) and it is *free* under MIT license. 

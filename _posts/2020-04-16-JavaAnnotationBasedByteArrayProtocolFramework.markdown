@@ -1,11 +1,11 @@
 ---
 layout: post
 title: JAVA ANNOTATION-BASED BYTE ARRAY PROTOCOL FRAMEWORK
+author: rmarcello
 date: 2020-04-16 00:00:00 +0000
-description: Create a Java Annotation-based byte array protocol framework
-img: java-protocol-framework/java-byte-protocol-framework.png
-fig-caption: java-protocol-framework/java-byte-protocol-framework.png
-tags: [java, bytearray, annotation, framework]
+image: assets/images/java-protocol-framework/java-byte-protocol-framework.png
+categories: [java, bytearray, annotation, framework]
+comments: false
 ---
 
 It often happens that developers hate to make repetivive tasks and spend their precious time writing long, complicated and error prone pieces of code. <em>The more code you write the higher is the probability of errors.</em> What developers really love is to solve a standard problem only once and after <strong>reuse the solution</strong> wherever they want.

@@ -1,11 +1,12 @@
 ---
 layout: post
 title: Google Cloud Storage integration with Apache Camel
+author: rmarcello
 date: 2021-04-03 00:00:00 +0000
-description: Google Cloud Storage integration with Apache Camel
-img: google-cloud-storage-camel/google-cloud-storage-camel.png
-fig-caption: google-cloud-storage-camel/google-cloud-storage-camel.png
-tags: [google, cloud, storage, camel, integration, java]
+image: assets/images/google-cloud-storage-camel/google-cloud-storage-camel.png
+categories: [google, cloud, storage, camel, integration, java]
+comments: false
+featured: true
 ---
 The rising adoption of Cloud services need also to integrate this features with new and existing applications.
 Apache Camel is an Open Source integration framework that empowers developers to quickly and easily integrate various systems consuming or producing data. It is widely used because is a small library that has minimal dependencies for easy embedding in java application. For more information about Camel and it's documentation visit [camel.apache.org](https://camel.apache.org).
@@ -84,7 +85,7 @@ Suppose that we have a "source-bucket" where we put some images and that we want
 We can define a route where the "source-bucket" can be the starting point. A google storage camel consumer will poll the source-bucket verifying if there are unprocessed images. For each new file, It will load the image and move the file to the "consumed-bucket" without any modification. The loaded image will be processed by "thumbnail-processor" that implements the logic to resize the image. Later the resulting image will be sent to a google storage producer that will write the image to a "result-bucket". At the end another producer will make a download URL for the object.
 
 The use case can be represented by the following schema:
-![camel-route]({{site.baseurl}}/assets/img/google-cloud-storage-camel/camel-route.png)
+![camel-route]({{site.baseurl}}/assets/images/google-cloud-storage-camel/camel-route.png)
 
 ## Developement details: Camel main
 All the source code will be available on my github from the following link: [Camel experiments](https://github.com/marcelloraffaele/camel-experiments).
@@ -194,12 +195,12 @@ AbstractCamelContext           INFO  Apache Camel 3.9.0 (MyTimerCamel) started i
 
 Notice that automatically (by default, you can configure it ) if not present the component creates the buckets:
 
-![bucket-list]({{site.baseurl}}/assets/img/google-cloud-storage-camel/bucket-list.png)
+![bucket-list]({{site.baseurl}}/assets/images/google-cloud-storage-camel/bucket-list.png)
 
 
 When a new file is available into the bucket:
 
-![added-file]({{site.baseurl}}/assets/img/google-cloud-storage-camel/added-file.png)
+![added-file]({{site.baseurl}}/assets/images/google-cloud-storage-camel/added-file.png)
 
 
 the component consumes the file and moves the data though the routes, processes the image, save it inside the result bucket and creates a URL:
@@ -211,12 +212,12 @@ route4                         INFO  URL for sourcebucket576832/hokusai.png=http
 
 Let's show how the buckets changed:
 
-![post-execution]({{site.baseurl}}/assets/img/google-cloud-storage-camel/post-execution.png)
+![post-execution]({{site.baseurl}}/assets/images/google-cloud-storage-camel/post-execution.png)
 
 
 Notice that the source bucket is empty, the consumed bucket contains the original images and the result bucket contains the thumbnail. In addition, the original image was 1.3MB and the resulting thumbnail is 4KB. So, mission completed!!!
 
-![hokusai-diff]({{site.baseurl}}/assets/img/google-cloud-storage-camel/hokusai-diff.png)
+![hokusai-diff]({{site.baseurl}}/assets/images/google-cloud-storage-camel/hokusai-diff.png)
 
 
 

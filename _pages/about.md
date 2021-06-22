@@ -1,0 +1,33 @@
+---
+layout: page
+title: About me
+permalink: /about
+comments: false
+---
+
+<div class="row justify-content-between">
+
+	<div class="col-md-2">
+		<img src="/assets/images/foto.png" class="img-fluid">
+	</div>
+
+	<div class="col-md-6 pr-5">
+		
+		<p>I am a AWS Certified Solutions Architect with extensive experience in spearheading the management, design, development, implementation and testing of IT solutions.
+		I love Cloud technologies and I am a Kubernetes Lover. Here you can find some articles about my experiences and my ideas about some IT topics. I hope you can find it interesting!</p>
+
+		<p>If you want to know more about me:</p>
+		<ul>
+			<li>Visit <a href="https://www.linkedin.com/in/raffaele-marcello-4b684514/">Linkedin page</a></li>
+			<li>Visit <a href="https://github.com/marcelloraffaele">Github repository</a></li>
+			<li>Follow me on <a href="https://twitter.com/rmarcello">Twitter</a></li>
+		</ul>
+		
+
+	</div>
+
+	<div class="col-md-4">
+		<div class="sticky-top sticky-top-80">
+		</div>
+	</div>
+</div>
