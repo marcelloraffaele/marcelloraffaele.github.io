@@ -15,10 +15,10 @@ Those of you that (like me) work every day with microservices know how can be us
 You can install Smocker either using a binary Linux file or via docker. It is super simple to configure through a graphical interface or programmatically via API.
 Smocker allows you to define three different types of mocks:
 + **Static Mocks**: Return a static response for a given   request.
-+ **Dynamic Mocks**: Returns a response with variable parts. They can be declared using Go templates and Lua.
++ **Dynamic Mocks**: Return a response with variable parts. They can be declared using Go templates and Lua.
 + **Proxy**: Forward the request to an actual server in cases where actual mocking is not possible for testing.
 
-During this short post, I will show you its use through docker using the graphical interface and through the configuration via API.
+With this short post, I will show you how to run Smocker with docker and to configure it using the graphical interface and the API.
 
 # Configure your Mock via User Interface
 
@@ -34,8 +34,8 @@ docker run -d \
 
 As you can see, there are two exposed ports:
 
-+ Port 8080: is the mock HTTP server port that answer to Smoker requests
-+ Port 8081: is the configuration port. It's the port you will use to register new mock, via user interface and API.
++ Port 8080: is the mock HTTP server port that answers to Smoker requests
++ Port 8081: is the port you can use to register new mocks, via user interface or API.
 
 If we try to call an example api:
 ```
@@ -61,7 +61,7 @@ If we make access to the admin console via browser  [http://localhost:8081](http
 
 ![smocer-history]({{site.baseurl}}/assets/images/smocker-mock/smocker-history.png)
 
-From here we can directly ***directly create a new mock from request*** :
+From here we can ***directly create a new mock from request*** :
 
 ![smocer-history]({{site.baseurl}}/assets/images/smocker-mock/smocker-create-mock.png)
 
@@ -110,15 +110,15 @@ $ curl localhost:8080/colors -v
 ]
 ```
 
-It's clear that when we have many test cases and we want use automation we need a quicker way to configure our Mock Server.
-Smocker can be configured using it's API on the port 8081.
+If we have many test cases and we want to use automation we need a quicker way to configure our Mock Server.
+Smocker can be configured using its own API on the port 8081.
 
 # Configure Smocker using the API
 Smocker can be configured using a very simple [API](https://smocker.dev/technical-documentation/api.html#api).
 
-We can define mocks using YAML files defined as in [Smocker documentation](https://smocker.dev/technical-documentation/mock-definition.html#format-of-request-section).
+We can define mocks using YAML files as defined in [Smocker documentation](https://smocker.dev/technical-documentation/mock-definition.html#format-of-request-section).
 
-When we have our Yaml files ready we can configure the smocker via a POST HTTP request.
+When we have our Yaml files ready we can configure the smocker via a HTTP POST request.
 
 ## Reset the Smocker configuration
 First of all, if our Smocker is already configured let's clean the configuration:
@@ -128,7 +128,7 @@ curl -XPOST localhost:8081/reset
 {"message":"Reset successful"}
 ```
 
-Now if we check the Smocker configuration, we can list the mocks that after a reset is an empty list:
+After that if we check the Smocker configuration, the mock list is empty:
 ```
 $ curl -XGET localhost:8081/mocks
 []
@@ -159,7 +159,7 @@ Let's define a Yaml file with two mock requests:
 ```
 
 The first mock returns a (little) football player list.
-The second mock, return always an HTTP 404 error.
+The second mock returns always an HTTP 404 error.
 
 If we send the mock configuration request with the Yaml that we prepared:
 ```
@@ -212,7 +212,7 @@ $ curl -XGET localhost:8081/mocks
 ]
 ```
 
-and Call the first mock:
+if we call the first mock, the result is the following:
 ```
 $ curl -XGET localhost:8080/football/players | jq
 [
@@ -233,7 +233,7 @@ $ curl -XGET localhost:8080/football/players | jq
   }
 ]
 ```
-and the second mock:
+and if we call the second mock:
 ```
 $ curl -XGET localhost:8080/football/player/3 -v
 
@@ -247,9 +247,9 @@ $ curl -XGET localhost:8080/football/player/3 -v
 
 ```
 
-# Concusion
-Nowadays in order to improve the quality of our work it is essential to have tools that allow us to automate the tests of our microservices.
+# Conclusion
+In order to improve the quality of our work it is essential to have tools that allow us to automate the tests of our microservices.
 
-Smocker is a very useful tool that can help us to test our microservices application. It's configuration is very simple and can be integrated with our Dev/Ops tool without write tons of code. 
+Smocker is a very useful tool that helps us to test our microservices application. Its configuration is very simple and can be integrated with our Dev/Ops tool without writing tons of code. 
 
 I hope you liked this post, happy tests!
