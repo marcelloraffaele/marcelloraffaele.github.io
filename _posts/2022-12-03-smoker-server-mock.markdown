@@ -8,17 +8,17 @@ categories: [Microservices, Cloud, Mock, Docker, Kubernetes]
 comments: false
 featured: true
 ---
-Today I want to talk to you about how simple it is to use a tool that allows you to create mocks to test your microservices.
-Those of you that work with microservices had the need to create test cases that require you to interact with other microservices.
+Those of you that (like me) work every day with microservices know how can be useful to mock microservices in order to deeply test the architecture.
 
-[Smocker](https://smocker.dev/) allows you to create mockups of your microservices and quickly test the interaction as if you were using the originals.
-You can install Smocker either using a binary Linux file or via docker. It is simple to configure using a graphical interface or programmatically via API.
+[Smocker](https://smocker.dev/) allows you to create mockups for your microservices and to quickly create complex test scenarios.
+
+You can install Smocker either using a binary Linux file or via docker. It is super simple to configure through a graphical interface or programmatically via API.
 Smocker allows you to define three different types of mocks:
-+ *Static Mocks*: Return a static response for a given   request.
-+ *Dynamic Mocks*: Returns a response with variable parts. They can be declared using Go templates and Lua.
-+ *Proxy*: Forward the request to an actual server in cases where actual mocking is not possible for testing.
++ **Static Mocks**: Return a static response for a given   request.
++ **Dynamic Mocks**: Returns a response with variable parts. They can be declared using Go templates and Lua.
++ **Proxy**: Forward the request to an actual server in cases where actual mocking is not possible for testing.
 
-During this short post, I will show you its use through docker both using the graphical interface and through the configuration via API.
+During this short post, I will show you its use through docker using the graphical interface and through the configuration via API.
 
 # Configure your Mock via User Interface
 
@@ -248,6 +248,8 @@ $ curl -XGET localhost:8080/football/player/3 -v
 ```
 
 # Concusion
-Smocker is a very useful tool that can help us to test out microservices application.
-It can be integrated with our Dev/Ops tool without write tons of code.
+Nowadays in order to improve the quality of our work it is essential to have tools that allow us to automate the tests of our microservices.
+
+Smocker is a very useful tool that can help us to test our microservices application. It's configuration is very simple and can be integrated with our Dev/Ops tool without write tons of code. 
+
 I hope you liked this post, happy tests!

@@ -1,7 +1,7 @@
 # Site
 name: "Raffaele Marcello"
 title: "Raffaele Marcello"
-description: "My personal Blog, with articles about Cloud services, Kubernetes and Java"
+description: "My personal Blog, with articles about Cloud, Docker, Kubernetes, Java ad Golang"
 logo: 'assets/images/logo.png'
 favicon: 'assets/images/logo.png'
 baseurl: ''
