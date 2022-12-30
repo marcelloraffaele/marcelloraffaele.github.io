@@ -6,7 +6,7 @@ date: 2021-01-30 00:00:00 +0000
 image: assets/images/starevent-quarkus-2/starevent-quarkus.png
 categories: [quarkus, quarkusio, microservices, docker, kubernetes, java, prometheus, grafana, mysql]
 comments: false
-featured: true
+featured: false
 ---
 
 During the [previous article](https://marcelloraffaele.github.io/from-microservices-to-kubernetes-with-quarkus-1/) I talked about how was quick and simple to make a small microservices architecture using Quarkus as Cloud Native Stack. I presented an example application and built it from scratch to deploy on Kubernetes. It was a very positive experience because Quarkus give to the developer a set of extensions and plugins that give the opportunity to use the fresher technology in a very productively way making easy the developer's life.
