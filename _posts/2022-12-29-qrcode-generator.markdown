@@ -4,7 +4,7 @@ title: QR Generator in GO using Gin Web Framework
 author: rmarcello
 date: 2022-12-29 00:00:00 +0000
 image: assets/images/qrcode-generator/main-image.png
-categories: [Microservices, Cloud, Golang, Gin Gonic, QRCode, Docker, Kubernetes]
+categories: [Microservices, Cloud, Golang, Gin Web Framework, QRCode, Docker, Kubernetes]
 comments: false
 featured: true
 ---
